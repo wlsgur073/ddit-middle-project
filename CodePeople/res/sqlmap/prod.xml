@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="prod">
+	<resultMap class="kr.or.ddit.prod.vo.prodVO" id="prodMap">
+		<result column="PROD_NO" property="prodNo"/>
+		<result column="PROD_NM" property="prodNm"/>
+		<result column="PROD_PRICE" property="prodPrice"/>
+		<result column="PROD_PERIOD" property="prodPeriod"/>
+		<result column="PROD_TYPE" property="prodType"/>
+	</resultMap>
+	
+	<select id="selectProd" parameterClass="int" resultMap="prodMap">
+		SELECT * FROM PROD
+		WHERE PROD_NO = #PROD_NO#
+	</select>
+	
+</sqlMap>

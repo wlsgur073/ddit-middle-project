@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="jobGroup">
+
+	<resultMap class="kr.or.ddit.jobGroup.vo.JobGroupVO" id="JobGroupMap">
+		<result column="JG_CODE_NO" property="jgCodeNo"/>
+		<result column="JG_CODE_NM" property="jgCodeNm"/>
+	</resultMap>
+
+	<select id="selectJobGroupList" resultMap="JobGroupMap">
+		SELECT * FROM JOB_GROUP
+	</select>
+	
+</sqlMap>

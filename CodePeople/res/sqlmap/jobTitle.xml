@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="jobTitle">
+	<resultMap class="kr.or.ddit.jobTitle.vo.JobTitleVO" id="JobTitleMap">
+		<result column="JT_CODE_NO" property="jtCodeNo"/>
+		<result column="JT_CODE_NM" property="jtCodeNm"/>
+		<result column="JG_CODE_NO" property="jgCodeNo"/>
+	</resultMap>
+	<select id="selectJobTitleList" resultMap="JobTitleMap" parameterClass="int">
+		SELECT * FROM JOB_TITLE
+		 WHERE JG_CODE_NO = #jgCodeNo#
+	</select>
+	
+</sqlMap>

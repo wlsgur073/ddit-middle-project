@@ -1,0 +1,605 @@
+@charset "UTF-8";
+
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap");
+
+/* CSS에서 사용되는 고정값 정리 */
+:root {
+  --padding-header-left: 16px;
+  --padding-header-right: 12px;
+  --padding-header-ver: 9.94px;
+    
+  --padding-bodydivs-ver: 14px;
+  --padding-bodydivs-hor: 10px;
+  --padding-card-left: 16px;
+  --padding-board-card-body: 32px;
+  --padding-contdivs: 24px;
+  --margin-contdivs-ver: 14px;
+  --margin-dropdownbtn-right: 8px;
+
+  --page-width: 1092px;
+  --header-width-left: 345px;
+  --header-width-right: 470px;
+  --nav-left-var-width: 270px;
+  --body-content-width: 790px;
+  --board-card-width: 740px;
+  --card-width: 350px;
+  --card-left-width: 80px;
+
+  --header-height: 50px;
+  --aside-width: 270px;
+  --content-width: 810px;
+
+  --color-lightgray: rgb(217, 223, 235);
+  --color-black: rgb(23, 23, 23);
+
+  --color-border-basic: 1px solid rgb(217, 223, 235);
+  --radius-border: 4px;
+
+  --font--h1: 1.2em;
+  --font--h1--height: 20px;
+  --font--header: 14px;
+  /* input 속성의 border효과 제거 */
+  /* style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;" */
+}
+/*  */
+* {
+  font-family: "IBM Plex Sans KR", sans-serif;
+}
+
+/* 태그 숨김을 위한 클래스의 정의 */
+/* 기존에 숨어있는 요소에는 클래스값을 제거하고, 이벤트로 인해서 기존요소를 숨길경우 클래스값을 붙여주도록한다. */
+.hide {
+  display: none;
+}
+
+/* 헤더 */
+#header {
+  border-bottom: var(--color-border-basic);
+  height: var(--header-height);
+  display: flex;
+  justify-content: center;
+}
+#header-container {
+  position: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  height: var(--header-height);
+  width: var(--page-width);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background-color: white;
+  border-bottom: var(--color-border-basic);
+  z-index: 1;
+}
+
+/* 헤더 좌측 메뉴 */
+#header-left-menu {
+  width: var(--header-width-left);
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+#header-left-menu .divider {
+  border-left: var(--color-border-basic);
+  width: 1px;
+}
+#header-left-menu #logo {
+  box-sizing: border-box;
+  padding-top: var(--padding-header-ver);
+  padding-bottom: var(--padding-header-ver);
+  padding-left: var(--padding-header-left);
+  padding-right: var(--padding-header-left);
+}
+
+/* 헤더 좌측 통합 검색 */
+#header-left-menu #search-box {
+  box-sizing: border-box;
+  width: 278px;
+  height: 48px;
+  padding-top: var(--padding-header-ver);
+  padding-bottom: var(--padding-header-ver);
+  padding-left: var(--padding-header-left);
+  padding-right: var(--padding-header-left);
+}
+#header-left-menu #search-box #search-item {
+  color: var(--color-lightgray);
+  width: 246px;
+  padding-top: 4px;
+}
+#header-left-menu #search-box #search-item input::placeholder {
+  color: var(--color-lightgray);
+}
+#header-left-menu #search-box #search-item input:focus {
+  outline: none;
+}
+
+/* 헤더우측메뉴 */
+#header-right-menu {
+  width: var(--header-width-right);
+  display: flex;
+  justify-content: flex-end;
+}
+#header-link-box {
+  box-sizing: border-box;
+  margin-top: 4px;
+
+  padding-top: var(--padding-header-ver);
+  padding-bottom: var(--padding-header-ver);
+}
+#header-link-box .header-link {
+  margin-left: var(--padding-header-right);
+  margin-right: var(--padding-header-right);
+  color: var(--color-black);
+  font-size: var(--font--header);
+  text-align: center;
+  text-decoration: none;
+}
+#header-login-btn {
+  margin-top: var(--padding-header-ver);
+  margin-bottom: var(--padding-header-ver);
+  margin-left: var(--padding-header-right);
+  margin-right: var(--padding-header-right);
+  font-size: 12px;
+  width: 75px;
+  height: 32px;
+}
+#header-right-menu .divider {
+  border-left: var(--color-border-basic);
+  width: 1px;
+  margin-left: var(--padding-header-right);
+}
+
+/* 바디 화면 */
+#body {
+  margin-top: var(--header-height);
+  display: flex;
+  justify-content: center;
+}
+#body-container {
+  width: var(--page-width);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* 바디 좌측 메뉴 */
+/* 해당 메뉴 클릭시 이벤트로 active클래스를 넣어야한다.  */
+.nav-left-bar {
+  width: var(--nav-left-var-width);
+  box-sizing: border-box;
+  padding-left: var(--padding-bodydivs-hor);
+  padding-right: var(--padding-bodydivs-hor);
+  padding-top: var(--padding-bodydivs-ver);
+  padding-bottom: var(--padding-bodydivs-ver);
+  text-align: center;
+}
+.nav-left-bar a {
+  text-decoration: none;
+}
+.nav-left-bar li:hover {
+  box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.07),
+    0px -3px 7px 1px rgba(0, 0, 0, 0.07);
+}
+
+/* 원페이지 화면에서 이동하게 하는 메뉴 */
+.nav-sticky {
+  width: var(--nav-left-var-width);
+  box-sizing: border-box;
+  padding-left: var(--padding-bodydivs-hor);
+  padding-right: var(--padding-bodydivs-hor);
+  padding-bottom: var(--padding-bodydivs-ver);
+  text-align: center;
+  position: fixed;
+}
+
+/*  */
+/* 콘텐츠영역 */
+/* .company 기업정보 .human 인재정보 .jo 채용정보 .my 마이페이지 */
+#content {
+  width: var(--content-width);
+  box-sizing: border-box;
+  padding-left: var(--padding-bodydivs-hor);
+  padding-right: var(--padding-bodydivs-hor);
+  padding-top: var(--padding-bodydivs-ver);
+  padding-bottom: var(--padding-bodydivs-ver);
+}
+
+/* 콘텐츠 내부 검색 필터 박스 기본값*/
+#content .filter-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* content-box 클래스는 콘텐츠 내부의 div의 마진과 패딩을 관리하는 클래스 값이다. */
+#content .content-box {
+  border-radius: 4px;
+  border: 1px solid lightgray;
+  box-sizing: border-box;
+  margin-bottom: var(--margin-contdivs-ver);
+  padding: var(--padding-contdivs);
+}
+#content .content-box .h1 {
+  font-size: var(--font--h1);
+  text-align: left;
+  margin-bottom: var(--margin-contdivs-ver);
+}
+
+/* 콘텐츠 내부 검색 박스 내 드롭다운 */
+#content .filter-box-dropdowns {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: var(--margin-contdivs-ver);
+}
+#content .filter-box-dropdowns button {
+  margin-right: var(--margin-dropdownbtn-right);
+}
+
+#content .filter-box .search-text {
+  margin-bottom: var(--margin-contdivs-ver);
+  display: flex;
+  flex-direction: column;
+}
+.search-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: var(--margin-contdivs-ver);
+}
+
+/* 콘텐츠 내부 검색 박스 내 검색창 */
+
+#content .filter-box .search-text input[type="text"] {
+  width: var(--board-card-width);
+}
+#content .filter-box .search-text input[type="text"]::placeholder {
+  color: var(--color-lightgray);
+}
+
+/* 콘텐츠 내부 검색 박스 내 검색어저장 버튼 */
+#content .filter-box .filter-save-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+#content .filter-box .filter-save {
+  width: fit-content;
+  color: var(--color-lightgray);
+  border-color: var(--color-border-basic);
+}
+
+/* 콘텐츠 내부 검색 결과 */
+#content .search-result {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+/* 콘텐츠 내부 카드 공통 */
+#content .card {
+  width: var(--card-width);
+  margin-top: var(--margin-contdivs-ver);
+  margin-bottom: var(--margin-contdivs-ver);
+  display: flex;
+  flex-direction: row;
+}
+
+/* 채용 정보 카드 */
+#content .card-jo {
+  width: var(--content-width);
+}
+#content .card-left {
+  width: var(--card-left-width);
+  padding-top: var(--padding-card-left);
+  padding-left: var(--padding-card-left);
+  box-sizing: border-box;
+}
+#content .search-result .card-right .card-top-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* 기업에서만 적용되는 카드 별점 */
+#content .company .card-right .card-rating-box {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 12px;
+}
+#content .company .card-rating-box .card-rating-star {
+  margin-right: 4px;
+  color: gold;
+}
+#content .company .card-rating-box .card-rating-text {
+  text-align: center;
+  font-size: 0.7em;
+}
+
+/* 메뉴드롭박스버튼 */
+#content .btn-menu {
+  width: fit-content;
+  outline: none;
+  color: var(--color-lightgray);
+  border-color: white;
+}
+
+/* 카드 내부 링크 */
+.card-right a {
+  text-decoration: none;
+}
+
+/* 인재 카드 활동분야 언어 */
+#content .card .job-language {
+  font-size: 0.7em;
+}
+
+/* 채용 정보 카드 디바이더 */
+#content .card-jo .divider {
+  border-top: var(--color-border-basic);
+  margin-top: var(--padding-card-left);
+  margin-bottom: var(--padding-card-left);
+  height: 1px;
+}
+
+/* 채용정보 검색 결과 카드 세부 사항 */
+#content .jobs-detail-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#content .card-jo .card-jobs-detail-company-into {
+  font-size: 0.9em;
+}
+#content .card-jo .card-jobs-detail-company-jobgroup {
+  font-size: 0.8em;
+  color: gray;
+}
+#content .card-jo .jo-sm-font {
+  font-size: 0.8em;
+  color: gray;
+}
+
+/* 게시판 메인 */
+#content .board-main {
+  display: flex;
+  flex-direction: column;
+}
+/* 게시판의 이름 */
+#content .board-main h1 {
+  font-size: var(--font--h1);
+  text-align: left;
+  margin-bottom: var(--margin-contdivs-ver);
+}
+.board-main .board-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.board-main .board-header .board-name {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+}
+.board-main .divider {
+  border-top: var(--color-border-basic);
+  margin-top: var(--padding-card-left);
+  margin-bottom: var(--padding-card-left);
+  height: 1px;
+}
+
+/* 게시판의 글카드 안 제목과 조회수를 담는 박스 */
+.board-main .board-detail {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+/* 게시판판 게시글 제목 */
+.board-main .board-detail a {
+  text-decoration: none;
+}
+/* 조회수 박스 */
+.view-box {
+  font-size: 0.8em;
+  color: gray;
+}
+
+/* 콘텐츠 게시판 더보기 버튼 */
+.board-header .board-btn-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  width: fit-content;
+}
+.board-header .board-btn-box .btn {
+  width: fit-content;
+  height: fit-content;
+  color: var(--color-lightgray);
+  border-color: var(--color-border-basic);
+  font-size: 0.7em;
+}
+
+/* 마이페이지 */
+.my-box-item {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: var(--body-content-width);
+}
+
+.my-box-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: var(--padding-bodydivs-ver);
+  padding-right: var(--padding-bodydivs-ver);
+}
+/* 마이페이지 이력서 카드 */
+/* 사파리에서 버튼 오른쪽 정렬이 안되서 다시 적용한 이력서 버튼 박스 */
+.card-cv .card-top-box .my-btn-box {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+}
+/* 이력서, 게시판의 수정 삭제 버튼 */
+.card-body .my-btn-box .btn {
+  width: fit-content;
+  height: fit-content;
+  font-size: 0.7em;
+}
+.my-btn-box-cv {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+/* 이력서 카드 수정삭제 버튼 마진 */
+.card-body .my-btn-box .btn {
+  margin-left: 4px;
+}
+/* 이력서 카드의 상단 마진 */
+#content .card-cv {
+  width: var(--body-content-width);
+  padding-top: 30px;
+}
+/* 이력서 카드의 작은 글자*/
+.card-cv .card-text {
+  font-size: 0.8em;
+  color: gray;
+}
+/*게시판 게시글  */
+.board-body .card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#content .board .card {
+  width: var(--board-card-width);
+  flex-direction: column;
+  box-sizing: border-box;
+}
+/* 게시판 조회수 추천 코멘트 아이콘 박스   */
+.board-icon-box {
+  font-size: 0.8em;
+  color: gray;
+}
+/* 게시글 글 정보 박스 */
+.board-info-box {
+  font-size: 0.8em;
+  color: gray;
+  margin-bottom: var(--padding-board-card-body);
+}
+/* 게시글 제목 */
+.board #accordion .card-header {
+  height: 38px;
+  align-items: baseline;
+  padding-top: 0px;
+}
+#accordion .title-btn {
+  height: 28px;
+  padding: none;
+  font-size: 1em;
+}
+/* 게시글 내부 패딩  */
+#accordion .card-body {
+  padding-left: var(--padding-board-card-body);
+}
+.board-divider {
+  border-top: var(--color-border-basic);
+  height: var(--padding-contdivs);
+  margin-left: var(--padding-contdivs);
+  margin-right: var(--padding-contdivs);
+}
+/* 댓글박스 */
+.reply-box {
+  box-sizing: border-box;
+  padding-left: var(--padding-card-left);
+  padding-right: var(--padding-card-left);
+  font-size: 0.8em;
+}
+/* 게시글 아래 아이콘박스 */
+.board-bottom-icon-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.board-icon-item {
+  font-size: 0.8em;
+  margin-left: 8px;
+  margin-right: 8px;
+  width: 80px;
+}
+.reply-box .card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reply-dropdown-btn {
+  color: gray;
+}
+.reply-dropdown-btn:hover {
+  box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.07),
+    0px -3px 7px 1px rgba(0, 0, 0, 0.07);
+}
+.reply-writer-box {
+  font-size: 0.9em;
+  padding-top: 16px;
+  margin-left: 8px;
+}
+/* 댓글 카드 아이콘 상자 설정 */
+.reply-card-icon-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  margin-left: 24px;
+}
+.reply-card-icon-box .board-icon-item {
+  font-size: 0.9em;
+  width: 60px;
+}
+.reply-btn-box .btn {
+  width: fit-content;
+  font-size: 0.7em;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin-right: 4px;
+  margin-bottom: 12px;
+}
+
+
+
+/* 마이페이지의 유료서비스 항목 값  */
+/* 유료서비스 플랜 아래 설명 박스 */
+.payment-top-text{
+	magrin-top: 8px;
+}
+/* 유료서비스 플랜들을 감싸는 박스 */
+.payment-content-box{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	text-align: center;
+}
+.planbox {
+	width: 200px;
+}
+.panel-heading{
+	padding-top:20px;
+	height: 50px;
+	box-sizing: border-box;
+}
+/* 유료서비스 플랜별 설명 박스*/
+.panel-body{
+	padding-top:20px;
+	height: 250px;
+}
+/* 유료서비스 플랜 결제 버튼*/
+.panel-footer .btn:hover{
+	  box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.07),
+    0px -3px 7px 1px rgba(0, 0, 0, 0.07);
+}

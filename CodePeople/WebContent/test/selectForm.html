@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!--  부트스트랩 3사용 -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<!--  jquery사용 -->	
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--  serializeJSON함수 사용 -->
+<script src="../js/jquery.serializejson.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<title>Insert title here</title>
+</head>
+<body>
+
+<!-- 
+	job opening의 검색조건을 설정하기 위한 form
+	검색은 job opening vo를 이용하여 이루어지며
+	해당 data의 세부속성을 조회하기 위해 .을 사용할 것이다.
+	따라서 form의 데이터의 serializeJSON()메서드를 실행한  값을(<script src="../js/jquery.serializejson.min.js"></script> <-- 상대경로 설정주의 필요)
+	jobOpeningSearch(임시로 설정한 변수명)로 받고
+	이 데이터를 ajax에서 data에 담아 서블릿에 넘겨주며
+	서블릿에서는 BeanUtils.populate(vo, req.getParameterMap())을
+	이용하여 (commons-beanutils-1.8.3필요)검색용 vo를 구성하여 (이를 위해 form태그의 각종 태그(input, select, textarea 등)은
+	job opening vo의 column name과 동일하게 설정해야 한다.)
+	서비스에서 searchVO를 매개변수로 받고 작업이 완료된 jobOpeningVO List를 json로 구성한다.(dataType : 'json')
+	
+	<<페이지 처리>>
+	input : List<JobOpeningVO> list, PagingVO pagingVO;
+	ajax의 success에서는 이 json데이터를 paging작업하여 출력한다.
+	paging 작업의 처리 순서는 다음과 같다.
+	1. currentPage를 
+ -->
+<form method="post">
+	<select name="">
+		<option>
+	</select>
+</form>
+
+</body>
+</html>

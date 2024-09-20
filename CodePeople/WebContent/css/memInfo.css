@@ -1,0 +1,167 @@
+/* 마이페이지 - 회원정보를 위한 css 파일 */
+.list-group .memInfo {
+  cursor: pointer;
+}
+
+.list-group .infoList {
+  display: none;
+  padding: 0px;
+}
+
+.list-group .infoList li:hover {
+  filter: brightness(95%);
+}
+
+.my-box-item p {
+  padding: 0px 14px;
+  font-size: 0.8em;
+  color: darkgray;
+}
+
+.bx.bdrBx .bdrBx {
+  padding-top: 40px;
+  padding-bottom: 30px;
+}
+ol.step li:first-child {
+width: 246px;
+padding: 0 0 0 0px;
+background: none;
+}
+.step.clear.bdrBx{
+padding: 0px;
+}
+ol.step li {
+float: left;
+line-height: 20px;
+text-align: center;
+}
+li {
+list-style: none;
+}
+ol.step li.st_1 .st {
+width: 228px;
+margin-left: 11px;
+background-position: 0 0;
+}
+ol.step li .st {
+background: url(../images/guide.png) no-repeat;
+}
+ol.step li .st {
+display: inline-block;
+height: 183px;
+}
+ol.step li {
+float: left;
+width: 240px;
+padding: 0 0 0 54px;
+line-height: 20px;
+text-align: center;
+}
+ol.step li.st_2 .st {
+width: 172px;
+margin-left: -22px;
+background-position: -228px 0;
+}
+ol.step li.st_3 .st {
+width: 155px;
+margin-left: -18px;
+background-position: -407px 0;
+}
+ol.step li strong {
+display: block;
+font-size: 18px;
+color: #333;
+font-weight: normal;
+margin: 22px 0 9px 0;
+}
+ol.step li small {
+font-size: 0.8em;
+color: rgb(109, 105, 105);
+}
+.my-box-header .h1{
+font-size: 24px!important;
+color: #000;
+font-weight: normal;
+letter-spacing: -2px;
+}
+
+.zipInput{
+  display: flex;
+}
+.form-control.zip{
+width: 50%;
+margin: 0px;
+margin-right: 10px;
+}
+
+.error_next_box {
+  display: block;
+  margin: 9px 0 -2px;
+  font-size: 12px;
+  line-height: 14px;
+  color: red;
+}
+.error_next_box.green {
+  display: block;
+  margin: 9px 0 -2px;
+  font-size: 12px;
+  line-height: 14px;
+  color: #08a600;
+}
+
+/* 파일 업로드 css */
+/* Global style */
+
+.btn-tertiary {
+  color: #555;
+  padding: 0;
+  line-height: 40px;
+  width: 300px;
+  margin: auto;
+  display: block;
+  border: 2px solid #555;
+}
+.btn-tertiary:hover, 
+.btn-tertiary:focus {
+    color: lighten(#555, 20%);
+    border-color: lighten(#555, 20%);
+
+  }
+
+/* input file style */
+
+.input-file {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.js-labelFile {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.js-labelFile .icon:before {
+  content: "\f093";
+}
+.has-file .icon:before {
+    content: "\f00c";
+    color: #5AAC7B;
+  }
+  .uploadForm{
+    display: flex;
+  }
+
+  .uploadForm .btn-default{
+    border: 1px solid gray;
+    margin-left: 3px;
+  }
+
+  .uploadForm .btn-default:hover{
+    background: rgb(241, 241, 241);
+  }
+  

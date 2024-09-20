@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="hr">
+	<resultMap class="kr.or.ddit.hr.vo.HRVO" id="HRMap">
+		<result column="HR_NO" property="hrNo"/>
+		<result column="MEM_NO" property="memNo"/>
+		<result column="JG_CODE_NO" property="jgCodeNo"/>
+		<result column="JT_CODE_NO" property="jtCodeNo"/>
+		<result column="PL_CODE_NO" property="plCodeNo"/>
+	</resultMap>
+	
+<resultMap class="kr.or.ddit.hr.vo.HRCardVO" id="hrCardMap"> 
+	<result column="HR_NO" property="hrNo"/>
+	<result column="MEM_NM" property="memNm"/>
+	<result column="JT_CODE_NM" property="jtCodeNm"/>
+	<result column="PL_CODE_NM" property="plCodeNm"/>
+	<result column="HR_CURR_COM" property="hrCurrCom"/>
+</resultMap>
+
+<resultMap class="kr.or.ddit.hr.vo.HRCrrVO" id="hrCrrMap">
+<result column="CRR_NO" property="crrNo"/>
+<result column="CRR_COMP_NM" property="crrCompNm"/>
+<result column="CRR_IN_SERVICE" property="crrInService"/>
+<result column="CRR_RANK" property="crrRank"/>
+<result column="CRR_YEARS" property="crrYears"/>
+<result column="JG_CODE_NO" property="jgCodeNo"/>
+<result column="JG_CODE_NM" property="jgCodeNm"/>
+<result column="JT_CODE_NO" property="jtCodeNo"/>
+<result column="JT_CODE_NM" property="jtCodeNm"/>
+</resultMap>
+
+
+<resultMap class="kr.or.ddit.hr.vo.HRMyInfoVO" id="hrMyInfoMap">
+
+<result column="HR_NO" property="hrNo"/>
+<result column="MEM_NO" property="memNo"/>
+<result column="MEM_NM" property="memNm"/>
+<result column="HR_CMT"  property="hrCmt"/>     
+<result column="HR_OPEN" property="hrOpen"/>  
+<result column="HR_SAL"  property="hrSal"/>      
+<result column="HR_CNT"  property="hrCnt"/>      
+<result column="HR_INTRO"  property="hrIntro"/> 
+<result column="ATCH_FILE_ID" property="atchFileId"/>
+<result column="JG_CODE_NO" property="jgCodeNo"/>
+<result column="JG_CODE_NM" property="jgCodeNm"/>
+<result column="JT_CODE_NO" property="jtCodeNo"/>
+<result column="JT_CODE_NM" property="jtCodeNm"/>
+<result column="HR_CURR_COM" property="hrCurrCom"/>
+</resultMap>
+
+
+
+
+
+<resultMap class="kr.or.ddit.hr.vo.HRInfoVO" id="hrInfoMap">
+<result column="HR_NO" property="hrNo"/>
+<result column="MEM_NO" property="memNo"/>
+<result column="MEM_NM" property="memNm"/>
+<result column="MEM_IN_COM" property="memInCom"/>
+<result column="JG_CODE_NO" property="jgCodeNo"/>
+<result column="JG_CODE_NM" property="jgCodeNm"/>
+<result column="JT_CODE_NO" property="jtCodeNo"/>
+<result column="JT_CODE_NM" property="jtCodeNm"/>
+<result column="HR_CURR_COM" property="hrCurrCom"/>
+<result column="EDU_NO" property="eduNo"/>
+<result column="EDU_CODE_NO" property="eduCodeNo"/>
+<result column="EDU_CODE_NM" property="eduCodeNm"/>
+<result column="EDU_SCH_NM" property="eduSchNm"/>
+<result column="EDU_MAJOR" property="eduMajor"/>
+<result column="EDU_GRA_TOT" property="eduGraTot"/>
+<result column="EDU_GRA_AVG" property="eduGraAvg"/>
+<result column="CRR_NO" property="crrNo"/>
+<result column="CRR_COMP_NM" property="crrCompNm"/>
+<result column="CRR_IN_SERVICE" property="crrInService"/>
+<result column="CRR_RANK" property="crrRank"/>
+<result column="CRR_YEARS" property="crrYears"/>
+<result column="CERT_CODE_NO" property="certCodeNo"/>
+<result column="CERT_CODE_NM" property="certCodeNm"/>
+<result column="PL_CODE_NO" property="plCodeNo"/>
+<result column="PL_CODE_NM" property="plCodeNm"/>
+<result column="HR_SAL"  property="hrSal"/>      
+<result column="HR_CNT"  property="hrCnt"/>      
+<result column="HR_INTRO"  property="hrIntro"/>    
+<result column="ATCH_FILE_ID"  property="atchFileId"/> 
+<result column="HR_CMT"  property="hrCmt"/>     
+<result column="HR_OPEN" property="hrOpen"/>  
+             
+
+
+
+
+</resultMap>	
+	
+<select id="getHrNo" parameterClass="int" resultClass="int">
+ SELECT HR_NO
+   FROM HR
+  WHERE MEM_NO = #memNo#
+</select>
+
+	<select id="getMemNo" parameterClass="int" resultClass="int">
+	SELECT MEM_NO
+	  FROM HR
+	  WHERE HR_NO = #hrNo#
+	
+
+	</select>
+
+
+<select id="getFolHR" parameterClass="int" resultMap="hrCardMap">
+ 		SELECT A.HR_NO AS HR_NO,
+			   C.MEM_NM AS MEM_NM,
+	           B.JT_CODE_NM AS JT_CODE_NM,
+	           E.PL_CODE_NM AS PL_CODE_NM,
+	           D.HR_CURR_COM AS HR_CURR_COM
+	      FROM V_HR_SEARCH A, JOB_TITLE B, MEMBER C, HR D,  (   SELECT V_HR_SEARCH.HR_NO AS HR_NO,
+			                                                           PROG_LANG.PL_CODE_NM AS PL_CODE_NM                                                         
+			                                                      FROM PROG_LANG, PL_HR, V_HR_SEARCH
+			                                                     WHERE PROG_LANG.PL_CODE_NO = PL_HR.PL_CODE_NO
+			                                                       AND V_HR_SEARCH.HR_NO = PL_HR.HR_NO )E
+		 WHERE A.MEM_NO =  C.MEM_NO
+	  	   AND A.JT_CODE_NO = B.JT_CODE_NO
+	  	   AND A.HR_NO = E.HR_NO
+	  	   AND A.HR_NO = D.HR_NO
+           AND A.HR_NO IN (  SELECT HR_NO
+                                 FROM FAVORITE
+                                 WHERE FAV_CODE = 1
+                                  AND COM_NO = #comNo#)
+</select>
+
+
+<select id="getFavHR" parameterClass="int" resultMap="hrCardMap">
+
+	SELECT A.HR_NO AS HR_NO,
+			   C.MEM_NM AS MEM_NM,
+	           B.JT_CODE_NM AS JT_CODE_NM,
+	           E.PL_CODE_NM AS PL_CODE_NM,
+	           D.HR_CURR_COM AS HR_CURR_COM
+	      FROM V_HR_SEARCH A, JOB_TITLE B, MEMBER C, HR D,  (   SELECT V_HR_SEARCH.HR_NO AS HR_NO,
+			                                                           PROG_LANG.PL_CODE_NM AS PL_CODE_NM                                                         
+			                                                      FROM PROG_LANG, PL_HR, V_HR_SEARCH
+			                                                     WHERE PROG_LANG.PL_CODE_NO = PL_HR.PL_CODE_NO
+			                                                       AND V_HR_SEARCH.HR_NO = PL_HR.HR_NO )E
+		 WHERE A.MEM_NO =  C.MEM_NO
+	  	   AND A.JT_CODE_NO = B.JT_CODE_NO
+	  	   AND A.HR_NO = E.HR_NO
+	  	   AND A.HR_NO = D.HR_NO
+           AND A.HR_NO IN (  SELECT HR_NO
+                                 FROM FAVORITE
+                                 WHERE FAV_CODE = 2
+                                  AND COM_NO = #comNo#)
+
+</select>
+
+
+	<select id="getTotalHRCount" resultClass="int">
+		SELECT COUNT(*)
+		  FROM HR
+	</select>
+	
+	<select id="hrPagingList" parameterClass="kr.or.ddit.cmm.vo.HRPagingVO"
+			resultMap="HRMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM HR) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+
+	
+	<select id="hrCardPagingList" parameterClass="kr.or.ddit.cmm.vo.HRPagingVO" resultMap="hrCardMap">
+		SELECT A.HR_NO AS HR_NO,
+			   C.MEM_NM AS MEM_NM,
+	           B.JT_CODE_NM AS JT_CODE_NM,
+	           E.PL_CODE_NM AS PL_CODE_NM,
+	           D.HR_CURR_COM AS HR_CURR_COM
+	      FROM V_HR_SEARCH A, JOB_TITLE B, MEMBER C, HR D,  ( SELECT V_HR_SEARCH.HR_NO AS HR_NO,
+	                                                           PROG_LANG.PL_CODE_NM AS PL_CODE_NM                                                         
+	                                                      FROM PROG_LANG, PL_HR, V_HR_SEARCH
+	                                                     WHERE PROG_LANG.PL_CODE_NO = PL_HR.PL_CODE_NO
+	                                                       AND V_HR_SEARCH.HR_NO = PL_HR.HR_NO )E
+		 WHERE A.MEM_NO =  C.MEM_NO
+	  	   AND A.JT_CODE_NO = B.JT_CODE_NO
+	  	   AND A.HR_NO = E.HR_NO
+	  	   AND A.HR_NO = D.HR_NO
+	</select>
+	
+	
+	<select id="hrCardPagingSearchList" parameterClass="kr.or.ddit.hr.vo.HRSearchVO" resultMap="hrCardMap">
+		
+		
+		
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT HR_NO,
+		          			   MEM_NM,
+							   JT_CODE_NM,
+							   PL_CODE_NM,
+						       HR_CURR_COM
+					  	 FROM      (SELECT A.HR_NO AS HR_NO,
+			                               C.MEM_NM AS MEM_NM,
+								           B.JT_CODE_NM AS JT_CODE_NM,
+								           E.PL_CODE_NM AS PL_CODE_NM,
+								           D.HR_CURR_COM AS HR_CURR_COM
+								      FROM V_HR_SEARCH A, JOB_TITLE B, MEMBER C, HR D,  ( SELECT V_HR_SEARCH.HR_NO AS HR_NO,
+								                                                           PROG_LANG.PL_CODE_NM AS PL_CODE_NM                                                         
+								                                                      FROM PROG_LANG, PL_HR, V_HR_SEARCH
+								                                                     WHERE PROG_LANG.PL_CODE_NO = PL_HR.PL_CODE_NO
+								                                                       AND V_HR_SEARCH.HR_NO = PL_HR.HR_NO )E , (SELECT HR_NO
+			                                                                                                                      FROM V_HR_SEARCH
+			                                                                                                                     WHERE 1 = 1
+			                                                                                                                         <isGreaterThan property="jgCodeNo" compareValue="0">                                                                                                                       
+																																		AND JG_CODE_NO = #jgCodeNo#
+																																	</isGreaterThan>
+			                                                                                                                       <isGreaterThan property="plCodeNo" compareValue="0">
+																																		AND PL_CODE_NO = #plCodeNo#
+																																	</isGreaterThan>
+			                                                                                                                       <isGreaterThan property="eduCodeNo" compareValue="0">
+																																		AND EDU_CODE_NO = #eduCodeNo#
+																																	</isGreaterThan>
+			                                                                                                                       <isGreaterThan property="cityCodeNo" compareValue="0">
+																																		AND CITY_CODE_NO = #cityCodeNo#
+																																	</isGreaterThan>
+			                                                                                                                       <isGreaterThan property="provCodeNo" compareValue="0">
+																																		AND PROV_CODE_NO = #provCodeNo#
+																																	</isGreaterThan>
+																																	) F
+									 WHERE A.MEM_NO =  C.MEM_NO
+								  	   AND A.JT_CODE_NO = B.JT_CODE_NO
+								  	   AND A.HR_NO = E.HR_NO
+								  	   AND A.HR_NO = D.HR_NO
+			                           AND A.HR_NO = F.HR_NO)  HRSEARCH )A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	
+	</select>
+
+
+	<select id="getTotalCardSearchCount"
+		parameterClass="kr.or.ddit.hr.vo.HRSearchVO" resultClass="int">
+
+		SELECT COUNT (HR_NO)
+		  FROM V_HR_SEARCH
+		 WHERE 1 = 1
+		            <isGreaterThan property="jgCodeNo" compareValue="0">
+						AND JG_CODE_NO = #jgCodeNo#
+					</isGreaterThan>
+					<isGreaterThan property="plCodeNo" compareValue="0">
+							AND PL_CODE_NO = #plCodeNo#
+					</isGreaterThan>
+					<isGreaterThan property="eduCodeNo" compareValue="0">
+							AND EDU_CODE_NO = #eduCodeNo#
+					</isGreaterThan>
+					<isGreaterThan property="cityCodeNo" compareValue="0">
+							AND CITY_CODE_NO = #cityCodeNo#
+					</isGreaterThan>
+					<isGreaterThan property="provCodeNo" compareValue="0">
+							AND PROV_CODE_NO = #provCodeNo#
+					</isGreaterThan>
+	</select>
+	
+	
+	<select id="checkFavHr" parameterClass="kr.or.ddit.hr.vo.HRFavVO" resultClass="int">
+ 	 	 SELECT COUNT(HR_NO)
+	      FROM FAVORITE
+	     WHERE FAV_CODE=2
+           AND COM_NO = #comNo#
+	   	   AND HR_NO = #hrNo#
+	</select>
+	
+	
+	
+	<insert id="addFavHr" parameterClass="kr.or.ddit.hr.vo.HRFavVO">
+
+	 INSERT INTO FAVORITE (FAV_NO, FAV_CODE, HR_NO, COM_NO)
+ 	 VALUES(FAVORITE_SEQ.NEXTVAL, 2, #hrNo#, #comNo#)
+ 	
+	</insert>
+	
+	
+	<delete id="deleteFavHr" parameterClass="kr.or.ddit.hr.vo.HRFavVO" >
+	DELETE FROM FAVORITE
+	WHERE FAV_CODE = 2
+	  AND COM_NO = #comNo#
+	  AND HR_NO = #hrNo#	
+	</delete>
+	
+	
+	
+	<update id="updateJobInfo" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+	
+	UPDATE HR 
+	   SET HR_CMT = #hrCmt#,
+	   		HR_INTRO =#hrIntro#,
+	   		HR_OPEN=#hrOpen#,
+	   		HR_SAL=#hrSal#,
+	   	   JG_CODE_NO =#jgCodeNo#,
+       	   JT_CODE_NO= #jtCodeNo#,  
+           HR_CURR_COM = #hrCurrCom#
+     WHERE HR_NO = #hrNo#	
+	</update>
+
+	<select id="selectMyInfo" parameterClass="int" resultMap="hrMyInfoMap">
+	
+		 
+SELECT A.HR_NO,
+      A.MEM_NO,
+      D.MEM_NM,
+      NVL(A.HR_SAL,0) AS HR_SAL,
+     NVL(A.HR_CNT,0)AS HR_CNT,
+     NVL(A.HR_INTRO,0) AS HR_INTRO,
+     NVL(A.ATCH_FILE_ID,0) AS ATCH_FILE_ID,
+     NVL(A.HR_CMT,0) AS HR_CMT,
+     NVL(A.HR_OPEN,0)AS HR_OPEN,
+     NVL(A.JG_CODE_NO,0) AS JG_CODE_NO,
+     NVL(B.JG_CODE_NM,0) AS JG_CODE_NM,
+     NVL(A.JT_CODE_NO,0) AS JT_CODE_NO,
+     NVL(C.JT_CODE_NM,0) AS JT_CODE_NM,
+     NVL(A.HR_CURR_COM,0) AS HR_CURR_COM
+ FROM HR A,  JOB_GROUP B, JOB_TITLE C, MEMBER D   
+ WHERE A.MEM_NO = D.MEM_NO
+   AND B.JG_CODE_NO = A.JG_CODE_NO
+   AND C.JT_CODE_NO = A.JT_CODE_NO
+   AND A.MEM_NO = #memNo#
+
+
+	</select>
+	
+	
+	
+	<select id="selectApplyHRByJo" parameterClass="int" resultMap="hrMyInfoMap">
+	
+	
+	SELECT A.HR_NO,
+      A.MEM_NO,
+      D.MEM_NM,
+      NVL(A.HR_SAL,0) AS HR_SAL,
+     NVL(A.HR_CNT,0)AS HR_CNT,
+     NVL(A.HR_INTRO,0) AS HR_INTRO,
+     NVL(A.ATCH_FILE_ID,0) AS ATCH_FILE_ID,
+     NVL(A.HR_CMT,0) AS HR_CMT,
+     NVL(A.HR_OPEN,0)AS HR_OPEN,
+     NVL(A.JG_CODE_NO,0) AS JG_CODE_NO,
+     NVL(B.JG_CODE_NM,0) AS JG_CODE_NM,
+     NVL(A.JT_CODE_NO,0) AS JT_CODE_NO,
+     NVL(C.JT_CODE_NM,0) AS JT_CODE_NM,
+     NVL(A.HR_CURR_COM,0) AS HR_CURR_COM
+ FROM HR A,  JOB_GROUP B, JOB_TITLE C, MEMBER D   
+ WHERE A.MEM_NO = D.MEM_NO
+   AND B.JG_CODE_NO = A.JG_CODE_NO
+   AND C.JT_CODE_NO = A.JT_CODE_NO
+   AND A.HR_NO IN (SELECT HR_NO
+ 				 	FROM APPLY
+ 				 	WHERE JO_NO = #joNo#)
+	
+
+	
+	</select> 
+	
+	
+	
+	
+	
+	
+	
+	<insert id="insertCrr" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+	 INSERT INTO CAREER 
+ 	 VALUES(CAREER_SEQ.NEXTVAL, #crrCompNm#,#crrInService#,#crrRank#,#crrYears#,#jgCodeNo#,#jtCodeNo#)
+ 	 
+ 	 <selectKey keyProperty="crrNo" resultClass="Integer">
+ 		SELECT CAREER_SEQ.CURRVAL FROM DUAL							
+	 </selectKey>
+	</insert>
+	
+	<insert id="insertCrrHR" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+		INSERT INTO CRR_HR
+		 VALUES (#crrNo#,#hrNo#)
+	</insert>
+	
+	
+	<select id="selectCrr" parameterClass="int" resultMap="hrCrrMap">
+	
+	SELECT  A.CRR_NO AS CRR_NO,
+        	NVL(A.CRR_COMP_NM,0) AS CRR_COMP_NM,
+        	NVL(A.CRR_IN_SERVICE,0) AS CRR_IN_SERVICE,
+        	NVL(A.CRR_RANK,0) AS CRR_RANK,
+      		NVL(A.CRR_YEARS,0) AS CRR_YEARS,
+        	A.JG_CODE_NO AS JG_CODE_NO,
+        	B.JG_CODE_NM AS JG_CODE_NM,
+        	A.JT_CODE_NO AS JT_CODE_NO,
+        	C.JT_CODE_NM AS JT_CODE_NM                        
+  	   FROM CAREER A,  JOB_GROUP B, JOB_TITLE C
+      WHERE A.JG_CODE_NO = B.JG_CODE_NO
+        AND A.JT_CODE_NO = C.JT_CODE_NO
+        AND A.CRR_NO  IN  (SELECT CRR_NO
+                             FROM CRR_HR
+                            WHERE HR_NO = #hrNo#)
+
+	</select>
+	
+	<delete id="deleteCrrHR" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+	DELETE FROM CRR_HR
+	 WHERE CRR_NO = #crrNo#
+	   AND HR_NO = #hrNo#
+	</delete>
+	
+	
+	<delete id="deleteCrr" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+	DELETE FROM CAREER
+	WHERE CRR_NO =#crrNo#
+	</delete>
+
+
+
+	<select id="checkNew" parameterClass="int" resultClass="int">
+	SELECT JG_CODE_NO
+	FROM HR
+	WHERE MEM_NO =#memNo# 
+	
+	
+	</select>
+
+
+
+
+
+
+     <update id="hrCntUp" parameterClass="int">
+      UPDATE HR
+         SET HR_CNT = HR_CNT+1
+       WHERE HR_NO = #hrNo#  
+     </update>
+
+
+
+	
+	
+</sqlMap>

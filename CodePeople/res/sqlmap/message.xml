@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="message">
+	<resultMap class="MessageVO" id="MessageMap">
+		<result column="MSG_NO" property="msgNo"/>
+		<result column="MSG_CONT" property="msgCont"/>
+		<result column="MSG_SENDDATE" property="msgSenddate"/>
+		<result column="MSG_OPENDATE" property="msgOpendate"/>
+		<result column="MEM_SENDER_NO" property="memSenderNo"/>
+		<result column="MEM_RECEIVER_NO" property="memReceiverNo"/>
+	</resultMap>
+<!-- <select id="getClassMessage" parameterClass="String" resultClass="MessageVO">
+        select class_msg.class_id as receiver, mem_id as sender, msg_cont as content, msg_senddate as senddate
+        from class_msg, member
+        where class_msg.class_id = #class_id#
+        and msg_sender = mem_no
+        order by class_msg.cmsg_no
+    </select> -->
+ 
+    <select id="getMessage" parameterClass="map" resultMap="MessageMap">
+        select b.mem_id as receiver, c.mem_id as sender, a.msg_content as content, to_char(a.msg_senddate,'yyyy-mm-dd hh24:mi:ss') as sentdate
+        from message a, member b, member c
+        where ((msg_sender = #user# and msg_target_id = #audience#)
+        or (msg_target_id = #user# and msg_sender = #audience#))
+        and a.msg_target_id = b.mem_no
+        and a.msg_sender = c.mem_no
+        order by msg_no
+    </select>
+	
+	<select id="getAudiences" parameterClass="String" resultClass="memberVO"> mem_no = mem_no
+        select audience as mem_id, (select mem_no from member where mem_id=audience) as mem_no
+        from
+        (select case when (select mem_id
+                            from member
+                            where mem_no=#mem_no#) = b.mem_id then c.mem_id
+                    else b.mem_id end as audience, a.msg_content, a.msg_senddate
+        from message a, member b, member c
+        where (msg_sender = #mem_no# or msg_target_id = #mem_no#)
+        and a.msg_target_id = b.mem_no
+        and a.msg_sender = c.mem_no
+        order by msg_no desc)
+        group by audience
+    </select>
+</sqlMap>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="prov">
+	<resultMap class="kr.or.ddit.prov.vo.ProvVO" id="ProvMap">
+		<result column="PROV_CODE_NO" property="provCodeNo"/>
+		<result column="CITY_CODE_NO" property="cityCodeNo"/>
+		<result column="PROV_CODE_NM" property="provCodeNm"/>
+	</resultMap>
+	<resultMap class="kr.or.ddit.prov.vo.CityVO" id="CityMap">
+		<result column="CITY_CODE_NO" property="cityCodeNo"/>
+		<result column="CITY_CODE_NM" property="cityCodeNm"/>
+	</resultMap>
+
+	<select id="selectCityList" resultMap="CityMap">
+		SELECT * FROM CITY
+	</select>
+	
+	<select id="selectProvList" resultMap="ProvMap" parameterClass="int">
+		SELECT * FROM PROV
+		 WHERE CITY_CODE_NO = #cityCodeNo#
+	</select>
+	
+	<select id="convertToCityNo" resultClass="int" parameterClass="String">
+		SELECT CITY_CODE_NO FROM CITY WHERE CITY_CODE_NM like #cityCodeNm# || '%'
+	</select>
+	
+	<select id="convertToProvNo" resultClass="int" parameterClass="java.util.HashMap">
+		SELECT PROV_CODE_NO FROM PROV 
+		WHERE PROV_CODE_NM = #PROV_CODE_NM#
+		      AND CITY_CODE_NO = #CITY_CODE_NO#
+	</select>
+	
+</sqlMap>

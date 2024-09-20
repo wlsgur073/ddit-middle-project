@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="schedule">
+
+	<resultMap class="kr.or.ddit.schedule.vo.ScheduleVO" id="ScheduleMap">
+		<result property="scheNo" column="SCHE_NO"/>
+		<result property="calTag" column="CAL_TAG"/>
+		<result property="calTagColor" column="CAL_TAG_COLOR"/>
+		<result property="scheCont" column="SCHE_CONT"/>
+		<result property="scheSdate" column="SCHE_SDATE"/>
+		<result property="scheEdate" column="SCHE_EDATE"/>
+		<result property="joNo" column="JO_NO"/>
+	</resultMap>
+	
+	<resultMap class="kr.or.ddit.hr.vo.HRVO" id="HRMap">
+		<result column="HR_NO" property="hrNo"/>
+		<result column="MEM_NO" property="memNo"/>
+		<result column="JG_CODE_NO" property="jgCodeNo"/>
+		<result column="JT_CODE_NO" property="jtCodeNo"/>
+		<result column="PL_CODE_NO" property="plCodeNo"/>
+	</resultMap>
+		
+	<select id="joScheduleList" resultMap="ScheduleMap">
+		SELECT * FROM V_JO_CAL
+	</select>
+	
+	<select id="getClipCal" parameterClass="kr.or.ddit.hr.vo.HRVO"
+			resultMap="ScheduleMap">
+		SELECT  AA.SCHE_NO,     AA.CAL_TAG,     AA.CAL_TAG_COLOR,
+		        BB.JO_TITLE AS SCHE_CONT,    BB.JO_SDATE AS SCHE_SDATE,    BB.JO_EDATE AS SCHE_EDATE,
+		        AA.JO_NO
+		  FROM (SELECT A.SCHE_NO,   C.CAL_TAG,  D.CAL_TAG_COLOR, B.JO_NO
+		          FROM SCHEDULE A
+		               INNER JOIN SCHE_JO B         ON (A.SCHE_NO = B.SCHE_NO)
+		               INNER JOIN SCHE_TAG C        ON (A.SCHE_NO = C.SCHE_NO)
+		               INNER JOIN CALENDER_TAG D    ON (C.CAL_TAG = D.CAL_TAG)) AA
+		        INNER JOIN (SELECT JO_NO, JO_TITLE, JO_SDATE, JO_EDATE
+		                      FROM JOB_OPENING A
+		                     WHERE JO_NO IN
+		                           (SELECT JO_NO
+		                              FROM CLIP
+		                             WHERE HR_NO = #hrNo#)) BB
+		        ON ( AA.JO_NO = BB.JO_NO )
+	</select>
+	<select id="getFavCal" parameterClass="kr.or.ddit.hr.vo.HRVO"
+			resultMap="ScheduleMap">
+		SELECT  AA.SCHE_NO,     AA.CAL_TAG,     AA.CAL_TAG_COLOR,
+		        BB.JO_TITLE AS SCHE_CONT,    BB.JO_SDATE AS SCHE_SDATE,    BB.JO_EDATE AS SCHE_EDATE,
+		        AA.JO_NO
+		  FROM (SELECT A.SCHE_NO,   C.CAL_TAG,  D.CAL_TAG_COLOR, B.JO_NO
+		          FROM SCHEDULE A
+		               INNER JOIN SCHE_JO B         ON (A.SCHE_NO = B.SCHE_NO)
+		               INNER JOIN SCHE_TAG C        ON (A.SCHE_NO = C.SCHE_NO)
+		               INNER JOIN CALENDER_TAG D    ON (C.CAL_TAG = D.CAL_TAG)) AA
+		        INNER JOIN (SELECT JO_NO, JO_TITLE, JO_SDATE, JO_EDATE
+		                      FROM JOB_OPENING
+		                     WHERE COM_NO IN
+		                           (SELECT COM_NO
+		                              FROM FAVORITE
+		                             WHERE FAV_CODE = 1
+		                                   AND HR_NO = #hrNo#)) BB
+		        ON ( AA.JO_NO = BB.JO_NO )			
+	</select>
+	
+	<select id="getMyCal" parameterClass="kr.or.ddit.hr.vo.HRVO"
+			resultMap="ScheduleMap">
+		SELECT  C.SCHE_NO,          D.CAL_TAG,     E.CAL_TAG_COLOR,
+		        C.SCHE_CONT,        C.SCHE_SDATE,     C.SCHE_EDATE,
+		        0 AS JO_NO
+		  FROM SCHEDULE A
+		       INNER JOIN SCHE_MEM B        ON (A.SCHE_NO = B.SCHE_NO
+		                                    AND A.SCHE_CODE = 1
+		                                    AND B.MEM_NO = #memNo#)
+		       INNER JOIN SCHE_MY C         ON (A.SCHE_NO = C.SCHE_NO)
+		       INNER JOIN SCHE_TAG D        ON (A.SCHE_NO = D.SCHE_NO)
+		       INNER JOIN CALENDER_TAG E    ON (D.CAL_TAG = E.CAL_TAG)		
+	</select>
+			
+</sqlMap>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="company">
+	<resultMap class="kr.or.ddit.company.vo.CompanyVO" id="CompanyMap">
+		<result column="PROV_CODE_NO" property="provCodeNo"/>
+		<result column="CITY_CODE_NO" property="cityCodeNo"/>
+		<result column="COM_INTRO" property="comIntro"/>
+		<result column="COM_DETAIL" property="comDetail"/>
+		<result column="COM_NO" property="comNo"/>
+		<result column="MEM_NO" property="memNo"/>
+		<result column="JG_CODE_NO" property="jgCodeNo"/>
+		<result column="COM_NM" property="comNm"/>
+		<result column="COM_DATE" property="comDate"/>
+		<result column="COM_CNT" property="comCnt"/>
+		<result column="COM_HPG" property="comHpg"/>
+		<result column="COM_FAV" property="comFav"/>
+		<result column="COM_SAL" property="comSal"/>
+	</resultMap>
+	
+	<resultMap class="java.util.HashMap" id="companyDetailMap">
+		<result column="RNUM" property="RNUM"/>
+		<result column="COM_NO" property="COM_NO" />
+		<result column="COM_NM" property="COM_NM" />
+		<result column="COM_HPG" property="COM_HPG" />
+		<result column="COM_DATE" property="COM_DATE" />
+		<result column="COM_CNT" property="COM_CNT" />
+		<result column="COM_SAL" property="COM_SAL" />
+		<result column="COM_INTRO" property="COM_INTRO" />
+		<result column="COM_DETAIL" property="COM_DETAIL" />
+		<result column="JG_CODE_NM" property="JG_CODE_NM" />
+		<result column="PROV_CODE_NM" property="PROV_CODE_NM" />
+		<result column="CITY_CODE_NM" property="CITY_CODE_NM" />
+	</resultMap>
+	
+	<resultMap class="java.util.HashMap" id="companyJOMap">
+		<result column="JT_CODE_NM" property="JT_CODE_NM" />
+		<result column="JO_TITLE" property="JO_TITLE" />
+		<result column="JO_SAL" property="JO_SAL" />
+		<result column="JO_SDATE" property="JO_SDATE"/>
+		<result column="JO_EDATE" property="JO_EDATE"/>
+	</resultMap>
+
+	<resultMap class="java.util.HashMap" id="companyReviewMap">
+		<result property="REV_CRR" column="REV_CRR"/>		
+		<result property="REV_WLB" column="REV_WLB"/>		
+		<result property="REV_SAL" column="REV_SAL"/>		
+		<result property="REV_CUL" column="REV_CUL"/>		
+		<result property="REV_EXECS" column="REV_EXECS"/>		
+		<result property="REV_COMT" column="REV_COMT"/>		
+		<result property="COM_REV" column="COM_REV"/>		
+	</resultMap>
+
+	<select id="companyPagingList" parameterClass="kr.or.ddit.cmm.vo.CompanyPagingVO" 
+		    resultMap="CompanyMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM V_COM_SEARCH) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+	
+	
+	<select id="getTotalCompanyCount" resultClass="int">
+		SELECT COUNT(*)
+		  FROM COMPANY
+	</select>
+	
+	<select id="companyCount" parameterClass="int" resultClass="int">
+		SELECT COUNT(*)
+		  FROM COMPANY
+		 WHERE MEM_NO = #MEM_NO#
+	</select>
+	
+	<select id="getCompanyDetailJOCount" resultClass="int">
+		SELECT COUNT(*)
+		  FROM JOB_OPENING
+		 WHERE COM_NO = #COM_NO#
+	</select>
+	
+		<insert id="companyInsert" parameterClass="kr.or.ddit.company.vo.CompanyVO">
+			INSERT INTO COMPANY VALUES		
+        (COMPANY_SEQ.NEXTVAL
+        ,#memNo#
+        ,#jgCodeNo#
+		 ,#comNm#
+		 ,#comDate#
+		 ,#comCnt#
+		 ,#comHpg#
+        ,100
+		 ,#comSal#
+        ,#provCodeNo#
+        ,#cityCodeNo#
+        ,#comIntro#
+        ,#comDetail#)
+        
+	</insert>
+	
+	
+		<select id="companyDetailList" resultMap="companyDetailMap" parameterClass="int">
+		SELECT AA.* FROM 
+				(SELECT ROWNUM AS RNUM, A.* FROM 
+						(SELECT * FROM 
+								(SELECT A.COM_NO, A.COM_NM, A.COM_HPG, A.COM_DATE, A.COM_CNT, A.COM_SAL, A.COM_INTRO, A.COM_DETAIL,
+												B.JG_CODE_NM,
+												E.PROV_CODE_NM, F.CITY_CODE_NM
+												FROM V_COM_SEARCH A
+												INNER JOIN JOB_GROUP B ON(A.JG_CODE_NO = B.JG_CODE_NO)
+												INNER JOIN PROV E ON(A.PROV_CODE_NO = E.PROV_CODE_NO)
+												INNER JOIN CITY F ON(A.CITY_CODE_NO = F.CITY_CODE_NO)
+												WHERE 1 = 1
+												AND E.CITY_CODE_NO = F.CITY_CODE_NO
+												AND COM_NO = #COM_NO#) G) A) AA
+		
+	</select>
+	
+	<select id="companyJOList" resultMap="companyJOMap" parameterClass="int">
+	
+	SELECT AA.* FROM
+		(SELECT ROWNUM AS RNUM, A.* FROM
+			(SELECT * FROM 
+				(SELECT A.JO_TITLE,  A.JO_SAL, A.JO_SDATE, A.JO_EDATE, C.JT_CODE_NM,
+					DECODE(FN_GET_SAL_TYPE_JO(A.JO_NO), '0', '정보없음',
+		                                                '1', '0-2000만원',
+		                                                '2', '2000-2500만원',
+		                                                '3', '2500-3000만원',
+		                                                '4', '3000-4000만원',
+		                                                '5', '4000-5000만원',
+		                                                '6', '5000만원 이상') AS JO_SAL_TYPE_NM
+		           FROM JOB_OPENING A
+		           INNER JOIN COMPANY B ON(A.COM_NO = B.COM_NO)
+		           INNER JOIN JOB_TITLE C ON(A.JT_CODE_NO = C.JT_CODE_NO)
+		           WHERE 1 = 1
+		           AND A.COM_NO = #COM_NO#) G) A) AA
+	
+	</select>
+	
+	<select id="companyJOCount" parameterClass="int" resultClass="int">
+		SELECT COUNT(*) FROM JOB_OPENING
+		WHERE 1 = 1
+		AND COM_NO = #COM_NO#
+	</select>
+	
+	<select id="companyReviewCount" parameterClass="int" resultClass="int">
+		SELECT COUNT(*) FROM REVIEW
+		WHERE 1 = 1
+		AND COM_NO = #COM_NO#
+	</select>
+	
+	<select id="companyReview" parameterClass="int" resultMap="companyReviewMap">
+		SELECT A.REV_CRR, A.REV_WLB, A.REV_SAL, A.REV_CUL, A.REV_EXECS, A.REV_COMT, B.COM_REV
+		  FROM REVIEW A
+		  INNER JOIN V_COM_SEARCH B ON(A.COM_NO = B.COM_NO)
+		  WHERE 1 = 1
+		  AND A.COM_NO = #COM_NO#
+	</select>
+	
+	<insert id="addFavCompany" parameterClass="kr.or.ddit.company.vo.ComFavVO">
+
+     INSERT INTO FAVORITE (FAV_NO, FAV_CODE, HR_NO, COM_NO)
+      VALUES(FAVORITE_SEQ.NEXTVAL, 1, #hrNo#, #comNo#)
+      
+    </insert>
+
+	<select id="checkFavCompany" parameterClass="kr.or.ddit.company.vo.ComFavVO" resultClass="int">
+ 	 	 SELECT COUNT(COM_NO)
+	      FROM FAVORITE
+	     WHERE FAV_CODE=1
+           AND COM_NO = #comNo#
+	   	   AND HR_NO = #hrNo#
+	</select>
+	
+    <delete id="deleteFavCompany" parameterClass="kr.or.ddit.company.vo.ComFavVO" >
+    DELETE FROM FAVORITE
+    WHERE FAV_CODE = 1
+      AND COM_NO = #comNo#
+      AND HR_NO = #hrNo#
+    </delete>
+    
+    <select id="getCompany" parameterClass="Integer" resultMap="CompanyMap">
+    	SELECT * FROM COMPANY WHERE COM_NO = #comNo#
+    </select>
+    
+    <update id="updateCompany" parameterClass="kr.or.ddit.company.vo.CompanyVO">
+    UPDATE COMPANY
+   	   SET COM_NM = #comNm#, JG_CODE_NO = #jgCodeNo#,
+   	       COM_DATE = #comDate#, COM_CNT = #comCnt#, COM_HPG = #comHpg#, 
+   		   COM_SAL = #comSal#, PROV_CODE_NO = #provCodeNo#, CITY_CODE_NO = #cityCodeNo#, 
+   		   COM_INTRO = #comIntro#, COM_DETAIL = #comDetail#
+ 	 WHERE COM_NO = #comNo#
+    </update>
+    
+    <delete id="deleteCompany" parameterClass="Integer">
+    	DELETE COMPANY
+    	WHERE COM_NO = #comNo#
+    </delete>
+    
+	<select id="getFolCompany" parameterClass="Integer" resultMap="CompanyMap">
+	 SELECT B.*
+		FROM 
+		(SELECT COM_NO FROM FAVORITE
+		WHERE FAV_CODE = 1
+		AND HR_NO =  #hrNo#) A
+		INNER JOIN COMPANY B ON(A.COM_NO = B.COM_NO)
+	</select>
+	
+		<select id="getFavCompany" parameterClass="Integer" resultMap="CompanyMap">
+	 SELECT B.*
+		FROM 
+		(SELECT COM_NO FROM FAVORITE
+		WHERE FAV_CODE = 2
+		AND HR_NO =  #hrNo#) A
+		INNER JOIN COMPANY B ON(A.COM_NO = B.COM_NO)
+	</select>
+	
+	
+    
+</sqlMap>

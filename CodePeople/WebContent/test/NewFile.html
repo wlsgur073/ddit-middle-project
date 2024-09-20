@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Simple Map</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+    #map {
+      height: 400px;
+      width: 400px;
+      margin: 50px;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+      height: 400px;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+
+  <script>
+    let map;
+
+    function initMap() {
+
+      //주소 대덕
+      const daeduk = { lat: 36.325043860973835, lng: 127.42015542944777 };
+      const geocoder = new google.maps.Geocoder();
+
+      // 지도 맵
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 16,
+        center: daeduk,
+      });
+
+      // 마커
+      var marker = new google.maps.Marker({
+        position: daeduk,
+        map: map,
+      });
+
+      //지오코더 생성
+
+      //지오코더 적용
+      geocoder.geocode({ 'address': "daeduk" }, function (results, status) {
+        console.log(results);
+        if (status == google.maps.GeocoderStatus.OK) {
+          var marker = new google.maps.Marker({
+            position: daeduk,
+            map: map,
+          });
+
+        } else {
+          alert("Geocode was not successful for the following reason: " + status);
+        }
+
+      });
+
+
+    }
+
+
+  </script>
+
+</head>
+
+<body>
+  <div id="map"></div>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtN5liwv6_i7DVJbfZ4mG4QzdyLKpERc0&callback=initMap&v=weekly"
+    async></script>
+</body>
+
+</html>

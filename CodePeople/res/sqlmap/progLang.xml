@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="progLang">
+	<resultMap class="kr.or.ddit.progLang.vo.ProgLangVO" id="ProgLangMap">
+		<result column="PL_CODE_NO" property="plCodeNo"/>
+		<result column="PL_CODE_NM" property="plCodeNm"/>
+	</resultMap>
+	
+	<resultMap class="kr.or.ddit.progLang.vo.PLHRVO" id="PLHRMap">
+		<result column="PL_CODE_NO" property="plCodeNo"/>
+		<result column="HR_NO" property="hrNo"/>
+	
+	</resultMap>
+	
+	
+	<select id="selectProgLangList" resultMap="ProgLangMap">
+		SELECT * FROM PROG_LANG
+	</select>
+	
+	<update id="insertPl" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+		INSERT INTO PL_HR(PL_CODE_NO,HR_NO)
+		VALUES(#plCodeNo#,#hrNo#)
+		
+	</update>
+	
+	
+		<select id="selectPl" parameterClass="int" resultMap="ProgLangMap">
+	
+	     SELECT  PL_CODE_NO,
+       			 PL_CODE_NM
+    	   FROM PROG_LANG
+          WHERE PL_CODE_NO IN (SELECT PL_CODE_NO
+                 	             FROM PL_HR
+                    	        WHERE HR_NO = #hrNo#)
+                                                     
+	</select>
+	
+	
+<delete id="deletePl" parameterClass="kr.or.ddit.progLang.vo.PLHRVO">
+
+DELETE FROM PL_HR
+WHERE PL_CODE_NO =#plCodeNo#
+  AND HR_NO=#hrNo#
+
+</delete>
+	
+	
+	
+</sqlMap>

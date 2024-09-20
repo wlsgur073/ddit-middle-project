@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <script src="https://kit.fontawesome.com/d3ee6ce800.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/CodePeople/js/jquery-3.6.0.min.js"></script>
+
+    <!-- include summernote css/js/ codemirror-->
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/theme/monokai.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/2.36.0/formatting.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+    
+    
+    <link rel="stylesheet" href="/CodePeople/css/main.css">
+    <script src="/CodePeople/js/boardFunction.js"></script>    
+    <script src="/CodePeople/js/jquery.serializejson.min.js"></script>
+    
+    
+<script>
+
+	
+
+</script>
+   
+   
+   <style>
+       .modal-body label{
+            width: 150px;
+       }
+       .note-popover *{
+  			display : none;
+  	   }
+       
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <!-- 헤더 -->
+    <div id="header">
+        <!-- 헤더 메인 메뉴 바 -->
+        <div id="header-container">
+            <!-- 좌측 메뉴 -->
+            <div id="header-left-menu">
+                <!-- 로고 -->
+                <a href="/CodePeople/rehearsal/index.jsp" id="logo"><i class="fas fa-copyright" style="font-size: 32px;"></i></a>
+                <div class="divider"></div>
+                <!-- 통합 검색창 -->
+                <div id="search-box">
+                    <div id="search-item">
+                        <i class="fas fa-search item" style="width:15.3px; height:19px;"> </i>
+                        <input class="" type="text"
+                            style="height:19px; border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;"
+                            placeholder="통합검색">
+                    </div>
+                </div>
+            </div>
+            <!-- 우측 메뉴 -->
+            <div id="header-right-menu">
+                <!-- 메인 메뉴 링크 -->
+                <div id="header-link-box">
+                    <a class="header-link" href="/CodePeople/MainHR.do">인재</a>
+                    <a class="header-link" href="/CodePeople/CompanyPagingList.do">기업</a>
+                    <a class="header-link" href="/CodePeople/mainJsp/mainJO.jsp">채용</a>
+                    <a class="header-link" href="/CodePeople/htmltest/boardFunctionTest.html">커뮤니티</a>
+                    <a class="header-link" href="/CodePeople/GoMyPage.do">마이페이지</a>
+                </div>
+                <div class="divider"></div>
+                <!-- 로그인버튼 -->
+                <button id="header-login-btn" class="btn btn-primary btn-sm">로그인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 바디 -->
+    <div id="body">
+        <div id="body-container">
+            <!-- 바디 메인 좌측 메뉴바 -->
+            <div class="nav-left-bar">
+                <div class="nav-sticky">
+                    <ul class="list-group">
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=1"><li class="list-group-item">회사 생활</li></a>
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=2"><li class="list-group-item">사는 얘기</li></a>
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=3"><li class="list-group-item">이직 커리어</li></a>
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=4"><li class="list-group-item">스터디 모임</li></a>
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=5"><li class="list-group-item">Q & A</li></a>
+                    </ul>
+                </div>
+            </div>
+            <!-- 바디 콘텐츠 -->
+            <div id="content">
+            <!-- 게시판 메인: 카테고리 검색 -->
+            <div class="filter-box content-box board">
+                <h1 class="h1">관심있는 내용을 검색해보세요!</h1>
+                <div class="search-tags"></div>
+                <div class="input-group mb-3 col-lg-10 search-text">
+                    <input type="text" class="form-control" placeholder="검색어 입력">
+                </div>
+                <div class="filter-save-box">
+                    <button type="button" class="btn btn-outline-primary filter-save">검색</button>
+                </div>
+            </div>
+			
+            <!-- 게시판 게시글 상세 화면 글쓰기 댓글 등등 기능 있음-->
+            <div class="content-box search-result board board-main board-life">
+                <div class="board-header">
+                    <div class="board-name">
+                        <i class="fas fa-building"></i>&nbsp;<h1 class="h1">게시판</h1>
+                    </div>
+                    
+                    <div class="my-btn-box">
+<!--                         <button id="write" type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#writeModal">글쓰기</button> -->
+                    </div>
+                </div>
+					<!-- 게시글 작성(글쓰기) 폼 -->
+					<div class="modal" id="writeModal">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+
+								<!-- Modal Header -->
+								<div class="modal-header">
+									<h4 class="modal-title">글쓰기</h4>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+								</div>
+
+								<!-- Modal body -->
+								<div class="modal-body">
+                                    <form id="fid" action="">
+									    <label>작성자</label><input class="mobody-input writer" type="text" name="memId" disabled="disabled"><br>
+									    <label>제목</label><input class="mobody-input title" type="text" name="boardTitle"><br>
+									    <label>Tags</label><input class="mobody-input tag" type="text" name="boardHead">
+									    <input type="hidden" name="memNo" value="<%=vo.getMemNo%>">
+<!--                                         <div class="mobody-input" name="note" id="summernote"></div>  -->
+                                        <textarea name="boardCont" class="summernote"></textarea>
+                                    </form>
+<!--                                      action="/CodePeople/upload" method="post" enctype="multipart/form-data" -->
+                                    <form id="fileUpload">
+                                    <button type="button" id="send" class="btn btn-primary" data-bs-dismiss="modal">작성완료</button>
+                                   	<input type="file" name="uploadfile" class="btn btn-primary">
+                                   	<button type="submit" id="btnupload" value="업로드" class="btn btn-primary">업로드</button>
+									<button type="button" class="btn btn-primary" data-bs-dismiss="modal">닫기</button>
+                                    </form>
+								</div>
+
+								<!-- Modal footer -->
+								<div class="modal-footer">
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+	
+
+
+					<div class="board-body">
+<!--                 <div class="divider"></div> -->
+<!--                 아코디언 : 게시판 게시글들 시작 -->
+<!--                     <div id="accordion"> -->
+<!--                         게시글의 한단위  -->
+<!--                         card-hear 안 a태그와 게시글의 아이디를 맞춰주세요 -->
+<!--                         <div class="card"> -->
+<!--                             <div class="card-header"> -->
+<!--                                 <a class="btn title-btn" data-bs-toggle="collapse" href="#collapseOne"> -->
+<!--                                     <span class="board-detail-title">회사 다니기 싫다.</span> -->
+<!--                                 </a> -->
+<!--                                 <div class="board-icon-box"> -->
+<!--                                     <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                     <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                     <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                 </div> -->
+<!--                             </div> -->
+<!--                             게시글을 담고있는 곳 a 태그가 가르키는 곳 -->
+<!--                             <div id="collapseOne" class="collapse show" data-bs-parent="#accordion"> -->
+<!--                                 <div class="card-body"> -->
+<!--                                     <div class="board-info-box"> -->
+<!--                                         작성자&nbsp;:&nbsp;<span class="board-detail-writer">홍길동</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<!--                                         작성일&nbsp;:&nbsp;<span class="board-detail-date">2021/10/18</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<!--                                         <a href="" style="text-decoration: none;">추천</a>&nbsp;&nbsp; -->
+<!--                                         <a href="" style="text-decoration: none;">신고</a> -->
+<!--                                     </div> -->
+<!--                                     <span class="board-detail-content"> -->
+<!--                                         다닐 회사가 있는 건 좋은 거지요 룰루랄라<br> -->
+<!--                                         안에 또 내용 넣어야 하는데 무어가 있을까 <br> -->
+<!--                                         작성자 작성일 끝?<br> -->
+<!--                                         아니야 신고 버튼 추천 버튼도 만들어야해요<br> -->
+<!--                                         하하하하하<br> -->
+<!--                                     </span> -->
+<!--                                     수정, 삭제 버튼 -->
+<!--                                     <div class="my-btn-box my-btn-box-cv"> -->
+                                        
+
+											
+											
+<!-- 											삭제  -->
+<!-- 											<button type="button" class="btn btn-outline-primary" id="delete">삭제</button> -->
+<!--                                     </div> -->
+                                    
+                                    
+                                    
+<!--                                 </div> -->
+<!--                                 <div class="board-divider"></div> -->
+<!--                                 <div class="board-bottom-icon-box">   -->
+<!--                                     <div class="board-icon-item"><i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">100</span></div> -->
+<!--                                     <div class="board-icon-item"><i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">댓글</span></div> -->
+<!--                                     <div class="board-icon-item"><i class="far fa-frown"></i>&nbsp;<span class="board-comment board-sm-font">신고</span></div> -->
+<!--                                 </div> -->
+<!--                                 <div class="reply-box"> -->
+<!--                                 <div class="input-group mb-3"> -->
+<!--                                         <input type="text" class="form-control" placeholder="댓글을 입력하세요"> -->
+<!--                                         <button class="btn btn-outline-primary" type="button">등록</button> -->
+<!--                                     </div> -->
+<!--                                     <div class="reply-card bg-light text-dark">                                         -->
+<!--                                         <div class="reply-writer-box">&nbsp;&nbsp;작성자&nbsp;&nbsp;<span class="reply-writer">홍**</span></div>  -->
+<!--                                         <div class="card-body"><span class="reply-content">이것은 댓글입니다. 드랍 박스내부에 대댓글을 항목으로 넣어 구현할까 생각 중이에요. 그리고 추천과 신고 대댓글 갯수를 넣으려면, 게시글 위에 보이는 이미지들을 또 쓰겠죠.....그리고 수정 삭제도 드랍박스 안에 넣을 꺼에요.아 모르겠다 이제 ㄴ일 해야지 모두들 꿋잠...</span></div> -->
+<!--                                         <div class="reply-card-icon-box">   -->
+<!--                                             <div class="board-icon-item"><i class="far fa-thumbs-up"></i>&nbsp;<span class="reply-like board-sm-font">좋아요</span></div> -->
+<!--                                             <div class="board-icon-item"><i class="far fa-comment"></i>&nbsp;<span class="reply-reply-cnt board-sm-font">대댓글</span></div> -->
+<!--                                             <div class="board-icon-item"><i class="far fa-frown"></i>&nbsp; <span class="reply-report board-sm-font">신고</span></div> -->
+<!--                                         </div> -->
+<!--                                         <div class="my-btn-box-cv reply-btn-box"> -->
+<!--                                             <button type="button" class="btn btn-outline-secondary">수정</button> -->
+<!--                                             <button type="button" class="btn btn-outline-secondary">삭제</button> -->
+                                        
+<!--                                         </div> -->
+<!--                                     <div class="reply-card bg-light text-dark" style="width:200px">                                         -->
+<!--                                         <div class="reply-writer-box">&nbsp;&nbsp;작성자&nbsp;&nbsp;<span class="reply-writer">홍**</span></div>  -->
+<!--                                         <div class="card-body"><span class="reply-content">. 그리고 추천과 신고 대댓글 갯수를 넣으려면, 게시글 위에 보이는 이미지들을 또 쓰겠죠.....그리고 수정 삭제도 드랍박스 안에 넣을 꺼에요.아 모르겠다 이제 ㄴ일 해야지 모두들 꿋잠...</span></div> -->
+<!--                                         <div class="reply-card-icon-box">   -->
+<!--                                             <div class="board-icon-item"><i class="far fa-thumbs-up"></i>&nbsp;<span class="reply-like board-sm-font">좋아요</span></div> -->
+<!--                                             <div class="board-icon-item"><i class="far fa-comment"></i>&nbsp;<span class="reply-reply-cnt board-sm-font">대댓글</span></div> -->
+<!--                                             <div class="board-icon-item"><i class="far fa-frown"></i>&nbsp; <span class="reply-report board-sm-font">신고</span></div> -->
+<!--                                         </div> -->
+<!--                                         <div class="my-btn-box-cv reply-btn-box"> -->
+<!--                                             <button type="button" class="btn btn-outline-secondary">수정</button> -->
+<!--                                             <button type="button" class="btn btn-outline-secondary">삭제</button> -->
+                                        
+<!--                                         </div> -->
+<!--                                     </div> -->
+<!--                                 </div> -->
+<!--                             </div> -->
+<!--                         </div> -->
+<!--                         <div class="card"> -->
+<!--                             <div class="card-header"> -->
+<!--                                 <a class="btn" data-bs-toggle="collapse" href="#collapseTwo"> -->
+<!--                                     <span class="board-detail-title">회사 다니기 싫다.</span> -->
+<!--                                 </a> -->
+<!--                                 <div class="board-icon-box"> -->
+<!--                                     <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                     <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                     <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                 </div> -->
+<!--                             </div> -->
+<!--                             <div id="collapseTwo" class="collapse" data-bs-parent="#accordion"> -->
+<!--                                 <div class="card-body"> -->
+<!--                                     <div class="board-info-box"> -->
+<!--                                         작성자&nbsp;:&nbsp;<span class="board-detail-writer">홍길동</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<!--                                         작성일&nbsp;:&nbsp;<span class="board-detail-date">2021/10/18</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<!--                                         <a href="" style="text-decoration: none;">신고</a> -->
+<!--                                     </div> -->
+<!--                                     <span class="board-detail-content"> -->
+<!--                                         다닐 회사가 있는 건 좋은 거지요 룰루랄라<br> -->
+<!--                                         안에 또 내용 넣어야 하는데 무어가 있을까 <br> -->
+<!--                                         작성자 작성일 끝?<br> -->
+<!--                                         아니야 신고 버튼 추천 버튼도 만들어야해요<br> -->
+<!--                                         하하하하하<br> -->
+
+<!--                                     </span> -->
+<!--                                     <div class="my-btn-box my-btn-box-cv"> -->
+<!--                                         <button type="button" class="btn btn-outline-primary">수정</button> -->
+<!--                                         <button type="button" class="btn btn-outline-primary">삭제</button> -->
+<!--                                     </div> -->
+<!--                                 </div> -->
+<!--                             </div> -->
+<!--                         </div> -->
+<!--                         <div class="card"> -->
+<!--                             <div class="card-header"> -->
+<!--                                 <a class="btn" data-bs-toggle="collapse" href="#collapseThree"> -->
+<!--                                     <span class="board-detail-title">회사 다니기 싫다.</span> -->
+<!--                                 </a> -->
+<!--                                 <div class="board-icon-box"> -->
+<!--                                     <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                     <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                     <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">100</span>&nbsp;&nbsp; -->
+<!--                                 </div> -->
+<!--                             </div> -->
+<!--                             <div id="collapseThree" class="collapse" data-bs-parent="#accordion"> -->
+<!--                                 <div class="card-body"> -->
+<!--                                     <div class="board-info-box"> -->
+<!--                                         작성자&nbsp;:&nbsp;<span class="board-detail-writer">홍길동</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<!--                                         작성일&nbsp;:&nbsp;<span class="board-detail-date">2021/10/18</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<!--                                         <a href="" style="text-decoration: none;">신고</a> -->
+<!--                                     </div> -->
+<!--                                     <span class="board-detail-content"> -->
+<!--                                         다닐 회사가 있는 건 좋은 거지요 룰루랄라<br> -->
+<!--                                         안에 또 내용 넣어야 하는데 무어가 있을까 <br> -->
+<!--                                         작성자 작성일 끝?<br> -->
+<!--                                         아니야 신고 버튼 추천 버튼도 만들어야해요<br> -->
+<!--                                         하하하하하<br> -->
+
+<!--                                     </span> -->
+<!--                                     <div class="reply-btn-box"> -->
+<!--                                         <button type="button" class="btn btn-outline-primary">수정</button> -->
+<!--                                         <button type="button" class="btn btn-outline-primary">삭제</button> -->
+<!--                                     </div> -->
+<!--                                 </div> -->
+<!--                             </div> -->
+<!--                         </div> -->
+<!--                     </div> -->
+<!--                 </div> -->
+        
+<!--             </div> -->
+	</div>
+
+            <!-- 게시판 메인 화면에서 보이는 각 게시판 카드-->
+            <div class="content-box search-result board board-main board-best">
+                <div class="board-header">
+                    <div class="board-name">
+                        <i class="fas fa-crown"></i>&nbsp;<h1 class="h1">토픽 베스트</h1>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">자바개발자 커리어 질문</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">2379</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">2479</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">1992</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">타전공 석사학위가 개발자 커리어에 도움이 될까요??</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">2401</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">2384</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">1007</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">형들 회사도 퇴사하면 ps 뱉어내?</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">2363</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">2363</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">2352</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">비전공자 커리어전환 국비냐 부캠이냐 고민이 많습니다</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">120</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">2360</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">480</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">간단한 mssql 쿼리좀 도와주세요...</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1792</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">2319</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">12230</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+            </div>
+
+
+
+
+
+
+
+            <div class="content-box search-result board board-main board-life">
+                <div class="board-header">
+                    <div class="board-name">
+                        <i class="fas fa-building"></i>&nbsp;<h1 class="h1">회사생활</h1>
+                    </div>
+                    <div class="board-btn-box">
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=1"><button type="button" class="btn btn-outline-primary" >더보기</button></a>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">야근 너무 많이 하는 회사 어떡해요</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">0</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">0</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">0</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">사수가 말 심하게 하면 대응방법 뭐 없나요.</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">353</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">504</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">2297</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">2021년 연봉계약 아직 안한회사 있나요??</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">526</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">404</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">469</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">진짜 우리회사 개판인듯..</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1346</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">2272</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">502</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">lg화학의 공무(검사)면 뭐하는직무인가요?</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1621</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1707</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">1297</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+
+
+
+            <div class="content-box search-result board board-main board-blah">
+                <div class="board-header">
+                    <div class="board-name">
+                        <div class="board-name"><i class="fas fa-comment-dots"></i>&nbsp;<h1 class="h1">사는얘기</h1>
+                        </div>
+                    </div>
+                    <div class="board-btn-box">
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=2"><button type="button" class="btn btn-outline-primary" >더보기</button></a>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">용돈 30만원이면 충분치 않나?</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1247</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">954</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">20</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">으 취한다</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">995</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">504</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">34</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">예전에 생각했던 사업 아이템</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">578</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">141</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">19</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">대화하자구</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">678</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">444</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">22</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">다들 친구 몇명있어?</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">351</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">342</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">111</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            
+            <div class="content-box search-result board board-main board-career">
+                <div class="board-header">
+                    <div class="board-name">
+                        <div class="board-name"><i class="fas fa-briefcase"></i>&nbsp;<h1 class="h1">이직 커리어</h1>
+                        </div>
+                    </div>
+                    <div class="board-btn-box">
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=3"><button type="button" class="btn btn-outline-primary" >더보기</button></a>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">4년차 C개발자 JAVA 개발자로 커리어 전환</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1571</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">215</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">2464</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">이직하는데 어느쪽이 더 커리어에 도움이 될까요.</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1895</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1162</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">527</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">2년차 이직 돈이냐 커리어냐 취업 고민... 조언 부탁드립니다</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">2379</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">2479</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">1992</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">자바개발자 커리어 질문</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1678</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">371</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">353</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">직장인 커리어 관련 책을 출간하였습니다.</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">351</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">342</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">111</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="content-box search-result board board-main board-career">
+                <div class="board-header">
+                    <div class="board-name">
+                        <div class="board-name"><i class="fas fa-briefcase"></i>&nbsp;<h1 class="h1">스터디 모임</h1>
+                        </div>
+                    </div>
+                    <div class="board-btn-box">
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=4"><button type="button" class="btn btn-outline-primary" >더보기</button></a>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">이펙티브 파이썬 (파이썬 코딩의 기술) 온라인 스터디 (마감)</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">955</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1331</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">536</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">C++ 코테 스터디 모집합니다 (마감)</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">118</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">2082</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">1924</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">[마감][신촌] 알고리즘 오프라인 스터디 추가인원 모집합니다.</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">2434</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1062</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">599</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">[대구] 오프라인 알고리즘 스터디원 추가 모집</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1944</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">95</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">555</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">[강남] 알고리즘(코딩테스트) 스터디 모집</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">351</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">342</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">111</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="content-box search-result board board-main board-career">
+                <div class="board-header">
+                    <div class="board-name">
+                        <div class="board-name"><i class="fas fa-briefcase"></i>&nbsp;<h1 class="h1">Q&A</h1>
+                        </div>
+                    </div>
+                    <div class="board-btn-box">
+                        <a href="/CodePeople/EachBoardPaging.do?currentPageNo=1&boardCode=5"><button type="button" class="btn btn-outline-primary" >더보기</button></a>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">springBoot Soap 통신</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">2444</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1374</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">2250</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">C++ 코테 스터디 모집합니다 (마감)</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">2438</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1138</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">1741</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">[마감][신촌] 알고리즘 오프라인 스터디 추가인원 모집합니다.</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">1447</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1703</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">689</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">[대구] 오프라인 알고리즘 스터디원 추가 모집</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">401</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1565</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">69</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+                <div class="board-card">
+                    <div class="board-detail">
+                        <a href="#" class="card-link"><span class="board-title">[강남] 알고리즘(코딩테스트) 스터디 모집</span></a>&nbsp;&nbsp;
+                        <div class="view-box">
+                            <i class="far fa-eye"></i>&nbsp;<span class="board-view board-sm-font">401</span>
+                            <i class="far fa-thumbs-up"></i>&nbsp;<span class="board-like board-sm-font">1565</span>&nbsp;&nbsp;
+                            <i class="far fa-comment"></i>&nbsp;<span class="board-comment board-sm-font">69</span>&nbsp;&nbsp; 
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+     </div>
+    </div>
+
+    <!--  풋터-->
+    <div id="footer">
+        <div id="footer-container"></div>
+    </div>
+    
+    
+	<!-- 게시글 수정 폼 -->
+	<div class="modal" id="updateModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+
+				<!--Modal Header  -->
+				<div class="modal-header">
+					
+					<h4 class="modal-title">수정하기</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<form >
+						<label>작성자</label><input class="mobody-input fin mwriter" type="text" name="memId" disabled="disabled"><br>
+						<label>제목</label><input class="mobody-input fin mtitle" type="text" name="boardTitle"><br> 
+						<label>Tags</label><input class="mobody-input fin mtag" type="text" name="boardHead">
+<!-- 					<div class="mobody-input" name="note" id="summernote"></div>  -->
+						<textarea name="boardCont" class="summernote fin mcont" placeholder="hi"></textarea>
+						<input type='hidden' name="boardNo" class="boardNo" value="">
+					</form>
+					<button type="button" id="upsend" class="btn btn-primary" data-bs-dismiss="modal">수정완료</button>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<!-- 댓글 수정폼 -->
+		<div id="modiForm" style="display: none">
+	      <textarea rows="5" cols="30"></textarea>
+	      <input type="button" id="btnok" value="확인"> 
+	      <input type="button" id="btnreset" value="취소">
+	   </div>
+
+
+
+</body>
+
+
+</html>

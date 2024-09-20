@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<title>Bootstrap Example</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://kit.fontawesome.com/d3ee6ce800.js" crossorigin="anonymous"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="../css/main.css">
+</head>
+<script>
+
+	
+</script>
+<style>
+	body * {
+		/* border: 2px solid black; */
+	}
+
+	.payment-desc {
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		
+	}
+	
+	.payment-box.card-title {
+		margin-bottom: 5%;
+	}
+	
+	.payment-plan {
+		border: 1px solid blue;
+		height: 600px;
+		width: 300px;
+	}
+
+	.content-box.carousel span {
+		background-color: silver;
+	}
+
+	.row {
+		justify-content: space-around;
+	}
+
+	.planbox,
+	.planbox2,
+	.planbox3 {
+		width: 200px;
+	}
+
+	.panel-footer h4 {
+		margin-top: 80px;
+	}
+
+	.planbox2 h4 {
+		margin-top: 55px;
+	}
+
+	.planbox3 h4 {
+		margin-top: 40px;
+	}
+</style>
+
+<body>
+	<!-- 헤더 -->
+	<div id="header">
+		<!-- 헤더 메인 메뉴 바 -->
+		<div id="header-container">
+			<!-- 좌측 메뉴 -->
+			<div id="header-left-menu">
+				<!-- 로고 -->
+				<a href="" id="logo"><i class="fas fa-copyright" style="font-size: 32px;"></i></a>
+				<div class="divider"></div>
+				<!-- 검색창 -->
+				<div id="search-box">
+					<div id="search-item">
+						<i class="fas fa-search item" style="width:15.3px; height:19px;"> </i>
+						<input class="" type="text"
+							style="height:19px; border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;"
+							placeholder="통합검색">
+					</div>
+				</div>
+			</div>
+			<!-- 우측 메뉴 -->
+			<div id="header-right-menu">
+				<!-- 메인 메뉴 링크 -->
+				<div id="header-link-box">
+					<a class="header-link" href="#">인재</a>
+					<a class="header-link" href="#">기업</a>
+					<a class="header-link" href="#">채용</a>
+					<a class="header-link" href="#">커뮤니티</a>
+					<a class="header-link" href="#">마이페이지</a>
+				</div>
+				<div class="divider"></div>
+				<button id="header-login-btn" class="btn btn-primary btn-sm">로그인</button>
+			</div>
+		</div>
+	</div>
+	<!-- 바디 -->
+	<div id="body">
+		<div id="body-container">
+			<!-- 마이페이지 좌측 메뉴바 -->
+			<div class="nav-left-bar nav-my">
+				<div class=" nav-sticky">
+					<ul class="list-group">
+						<li class="list-group-item "><a class="nav-link" href="#cv">이력서</a></li>
+						<li class="list-group-item"> <a class="nav-link" href="#fav-company">관심기업</a></li>
+						<li class="list-group-item"><a class="nav-link" href="#fav-jo">관심공고</a></li>
+						<li class="list-group-item"><a class="nav-link" href="#">캘린더</a></li>
+						<li class="list-group-item active"><a class="nav-link" href="#">유료서비스</a></li>
+						<li class="list-group-item"><a class="nav-link" href="#">회원정보</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- 바디 콘텐츠 -->
+			<div id="content">
+				<!-- 유료컨텐츠  -->
+				<div id="cv" class="content-box payment-desc my-main-cv">
+					<div class="my-box-item">
+						<div class="my-box-header">
+							<h1 class="h1 content-box">유료서비스</h1>
+						</div>
+					</div>
+					<div class="payment-box content-box">
+						<!-- -->
+						<div class="card-left">
+						</div>
+						<!-- 카드의 정보 -->
+						<div class="card-body card-right">
+							<div class="card-top-box">
+								<h1 class="payment-box card-title cv-title">인재 프리미엄 플랜</h1>
+							</div>
+							<!-- 프리미엄 소개-->
+							<div class="payment content-box">
+								인재 프리미엄 서비스를 통해 기업에서 인재를 검색할 때에 검색목록 상단에 표시하도록 합니다. <br>
+								<br>
+								대취업전쟁시대에서 돈을 지불해 다른사람들보다 먼저 취업하세요.
+							</div>
+						</div>
+						<div class="container-fluid">
+							<div class="text-center">
+							</div>
+							<div class="row">
+								<div class="content-box planbox">
+									<div class="panel panel-default text-center">
+										<div class="panel-heading">
+											<h2 class="mt-1">1개월</h2>
+										</div>
+										<hr class="mt-5">
+										<div class="panel-body mt-5">
+											<p class="plan-desc">째째하게 1개월만 <br> 쓰고 취업될거라고 <br> 생각하시는건 아니죠? </p>
+											<p> 자신있으시면 이걸로 하시던가요 ^^;</p>
+										</div>
+										<div class="panel-footer">
+											<h4>29,900원</h4>
+											<hr>
+											<button class="btn btn-lg" id="btn1" >결제하기</button>
+										</div>
+									</div>
+								</div>
+								<div class="content-box planbox2">
+									<div class="panel panel-default text-center">
+										<div class="panel-heading">
+											<h2 class="mt-1">3개월</h2>
+										</div>
+										<hr class="mt-5">
+										<div class="panel-body mt-5">
+											<p class="plan-desc">조금 덜 째째하게 3개월 플랜으로 하시게요? <br> 6개월이랑 가격차이도 별로 안나는데? </p>
+											<p>손해보는 장사 <br> 하시는군요 ㅡㅡ;</p>
+										</div>
+										<div class="panel-footer">
+											<h4>79,900원</h4>
+											<hr>
+											<button class="btn btn-lg" id="btn2">결제하기</button>
+										</div>
+									</div>
+								</div>
+								<div class="content-box planbox3">
+									<div class="panel panel-default text-center">
+										<div class="panel-heading">
+											<h2 class="mt-1">6개월</h2>
+										</div>
+										<hr class="mt-5">
+										<div class="panel-body mt-5">
+											<p class="plan-desc">코드피플 강력추천</p>
+											<p>당신은 능력보다 돈을 조금만 더 써서 남들보다 더 좋은 환경으로 취업할수 있을겁니다.</p>
+											<p>저희만 믿으세요</p>
+										</div>
+										<div class="panel-footer">
+											<h4>99,900원</h4>
+											<hr>
+											<button class="btn btn-lg" id="btn3">결제하기</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--  풋터-->
+	<div id="footer">
+		<div id="footer-container"></div>
+	</div>
+</body>
+<script src="../js/prod.js"></script>
+</html>

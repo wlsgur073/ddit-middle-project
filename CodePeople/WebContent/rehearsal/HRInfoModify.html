@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>title</title>
+  <link rel="stylesheet" href="../css/mystyle.css">
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../js/jquery.serializejson.min.js"></script>
+
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+	    console.log("DOM is ready");
+	    
+	    
+	    //화면 로드시 드랍다운의 버튼을 모두 가져온다.
+	    let dropdownBtns = document.querySelectorAll('.dropdown button');
+	 	    
+	    $(document).on("click",".dropdown-toggle",function(){
+	    	  bringOptions(this);
+	    });
+	 
+	    //현재 클릭한 드랍다운
+	    let dropdownBtn;	  
+	    
+	    let hrJobForm = document.querySelector('#hrJobForm');
+	    let jgCodeNo = document.querySelector('#jgCodeNo');
+	   	let jtCodeNo = document.querySelector('#jtCodeNo');
+	   	let hrCurrCom= document.querySelector('#hrCurrCom');
+	    
+	   	
+	    let options;  
+	    let cityCodeNo;
+	 
+	    
+	  //드랍박스에서 직군의 옵션값을 가져오는 메서드
+	    const initJobGroupList = (target) => {
+	    	$.ajax({
+	    		url : '/CodePeople/jobGroupList.do',
+	    		type : 'get',
+	    		dataType : 'json',
+	    		success : function(res){
+	    			let code = '<li><h5 class="dropdown-header">직군</h5></li>';
+	    			let datas = res;
+	    			datas.forEach(data=>{
+	    				code +=  `<li class="dropdown-item jobGroupOption" idx="${data.jgCodeNm}" value="${data.jgCodeNo}">${data.jgCodeNm}</li>`;
+	    			});
+	    			let parent = target.parentElement.querySelector('.dropdown-menu');
+	    			parent.innerHTML = code;	
+	    			setJobGroupOptions();
+	    		},
+	    		error : function(xhr){
+	    			alert(`status : ${xhr.status}\ntext : ${xhr.statusText}`);
+	    		}
+	    	})
+	    }
+	    
+	  //드랍박스 직군의 옵션에서만 적용되는 메서드
+	    const setJobGroupOptions = () =>{
+	    	jobGroupOptions = document.querySelectorAll('.jobGroupOption');
+	    	jobGroupOptions.forEach(option=>{
+	            option.addEventListener('click', event=>{
+	            	let option = event.currentTarget;
+	            	let parent = option.parentElement.parentElement.parentElement.getAttribute('id');
+	            	
+	            	if(parent =="hrJobForm"){
+	            	jgCodeNo.value = option.getAttribute('value');            	
+	           		let textValue = option.closest('.dropdown').querySelector('.textValue');
+	          		textValue.placeholder = option.getAttribute('idx');
+	            		
+	            	}else if(parent =="hrCrrForm"){
+	            		jgCodeNo.value = option.getAttribute('value');
+	            		document.querySelector('#jgCodeNoCrr').value = option.getAttribute('value');
+	            		let textValue = option.closest('.dropdown').querySelector('.textValue');
+	          			textValue.placeholder = option.getAttribute('idx')
+	            	}
+	          		
+	            })
+	        })
+	    }
+	    
+	  //드랍박스에서 학력의 옵션값을 가져오는 메서드
+	    const initEduTypeList = (target) => {
+	    	$.ajax({
+	    		url : '/CodePeople/EduTypeList.do',
+	    		type : 'get',
+	    		dataType : 'json',
+	    		success : function(res){
+	    			let code = '<li><h5 class="dropdown-header">학력</h5></li>';
+	    			let datas = res;
+	    			datas.forEach(data=>{
+	    				code += `<li class="dropdown-item option" idx="${data.eduCodeNm}" value="${data.eduCodeNo}" category="eduCodeNo">${data.eduCodeNm}</li>`;
+	    			})
+	    			let parent = target.parentElement.querySelector('.dropdown-menu');
+	    			parent.innerHTML = code;
+	    			setOptions();
+	    		},
+	    		error : function(xhr){
+	    			alert(`status : ${xhr.status}\ntext : ${xhr.statusText}`);
+	    		}		
+	    	})
+	    }
+	  //드랍박스에서 자격증의 옵션값을 가져오는 메서드
+	    const initCertList = (target) =>{
+	    	$.ajax({
+	    		url : '/CodePeople/CertList.do',
+	    		type : 'get',
+	    		dataType : 'json',
+	    		success : function(res){
+	    			let code = '<li><h5 class="dropdown-header">자격증</h5></li>';
+	    			let datas = res;
+	    			datas.forEach(data=>{
+	    				code += `<li class="dropdown-item option" idx="${data.certCodeNm}" value="${data.certCodeNo}" category="certCodeNo">${data.certCodeNm}</li>`;
+	    			})
+	    			let parent = target.parentElement.querySelector('.dropdown-menu');
+	    			parent.innerHTML = code;
+	    			setOptions();
+	    		},
+	    		error : function(xhr){
+	    			alert(`status : ${xhr.status}\ntext : ${xhr.statusText}`);
+	    		}
+	    		
+	    	})
+	    }
+	    
+	 // 드랍박스에서 활동분야의 옵션값을 가져오는 메서드
+	    const initProgLangList = (target) => {
+	    	$.ajax({
+	    		url : '/CodePeople/progLangList.do',
+	    		type : 'get',
+	    		dataType : 'json',
+	    		success : function(res){
+	    			let code = '<li><h5 class="dropdown-header">활동분야</h5></li>';
+	    			let datas = res;
+	    			datas.forEach(data=>{
+	    				code += `<li class="dropdown-item option" idx="${data.plCodeNm}" value="${data.plCodeNo}" category="plCodeNo">${data.plCodeNm}</li>`;
+	    			})
+	    			let parent = target.parentElement.querySelector('.dropdown-menu');
+	    		 	console.log(parent);
+	    			parent.innerHTML = code;	
+	    			setOptions();
+	    		},
+	    		error : function(xhr){
+	    			alert(`status : ${xhr.status}\ntext : ${xhr.statusText}`);
+	    		}		
+	    	})
+	    }
+	    
+	    
+	    //옵션의 선택값을 input창에 띄우고, 그 값을 폼에 저장하는 메서드 
+	    const setOptions = () => {
+	    	options = document.querySelectorAll('.option');
+	    	options.forEach(option=>{
+	            option.addEventListener('click', event=>{
+	            	let option = event.currentTarget;
+	            	let category = option.getAttribute('category');
+	            	if(category=='jtCodeNo'){
+		            	jtCodeNo.value = option.getAttribute('value');            	
+		           		let textValue = option.closest('.dropdown').querySelector('.textValue');
+		          		textValue.placeholder = option.getAttribute('idx');	            		
+	            	}
+	          		
+	            })
+	        })
+	    }
+	    
+	
+	  //드랍박스에서 직무의 옵션값을 가져오는 메서드
+	    const initJobTitleList = (target) => {
+	    		let jobGroupOptionNo = jgCodeNo.getAttribute('value');
+	    	$.ajax({
+	    		url : '/CodePeople/jobTitleList.do',
+	    		type : 'get',
+	    		data : { "jobGroupOptionNo" : jobGroupOptionNo },
+	    		dataType : 'json',
+	    		success : function(res){
+	    			let code = '<li><h5 class="dropdown-header">직무</h5></li>';
+	    			let datas= res;
+	    			if(jobGroupOptionNo !== 0){
+	    				datas.forEach(data=>{
+	    					code += `<li class="dropdown-item option" idx="${data.jtCodeNm}" value="${data.jtCodeNo}" category="jtCodeNo">${data.jtCodeNm}</li>`;
+	    				})
+	    			}else{
+	    				code += `<li>직무를 선택해주세요</li>`;
+	    			}
+	    			let parent = target.parentElement.querySelector('.dropdown-menu');
+	    			parent.innerHTML = code;	    			
+	    			setOptions();
+	    			
+	    		},
+	    		error : function(xhr){
+	    			alert(`status : ${xhr.status}\ntext : ${xhr.statusText}`);
+	    		}
+	    		
+	    	})
+	    }
+	    
+	    
+	  
+		// 드랍다운 아래 옵션 목록을 가져오는 메서드 
+	    const bringOptions = (btn) => {
+	      let key = btn.textContent;
+	      if (key === "직군") {
+	        initJobGroupList(btn);
+	      } else if (key === "직무") {
+	    	  initJobTitleList(btn);
+	      } else if (key === "학력") {
+	        initEduTypeList(btn);
+	      } else if (key === "활동분야") {
+	    	  initProgLangList(btn);
+	      } else if (key === "자격증") {
+	    	  initCertList(btn);
+	      }
+	     
+	    };
+
+		//모든 드랍 다운 항목에 이벤트 부여
+	    dropdownBtns.forEach(btn => {
+	      btn.addEventListener("click", event => {
+	        dropdownBtn = event.currentTarget;
+	        bringOptions(dropdownBtn);
+	      
+	      })
+	    })    
+	});
+	   
+  </script>
+</head>
+
+<style>
+#body{
+display: flex;
+justify-content: center;
+}
+#body-container{
+margin-top:50px;
+margin-left:auto;
+margin-right:auto;
+display:flex;
+flex-direction:row;
+}
+.nav-left-bar{
+width:250px;
+margin-top:50px;
+margin-right:10px;
+}
+.nav-left-bar li{
+text-align: center;
+width:200px;
+}
+
+.nav-left-bar li:hover {
+  box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.07),
+    0px -3px 7px 1px rgba(0, 0, 0, 0.07);
+}
+
+.nav-sticky {
+  width: var(--nav-left-var-width);
+  box-sizing: border-box;
+  padding-left: var(--padding-bodydivs-hor);
+  padding-right: var(--padding-bodydivs-hor);
+  padding-bottom: var(--padding-bodydivs-ver);
+  text-align: center;
+  position: fixed;
+}
+#content{
+width:800px;
+}
+#hrList1,#hrList2,#hrList3,#hrList4{
+margin-top:40px;
+}
+
+</style>
+
+
+
+<body>
+
+<div id="body">
+        <div id="body-container">
+			<div class="nav-left-bar">
+				<div class="nav-sticky">
+					<ul class="list-group">
+					<a href="/CodePeople/HRMyInfo.do"><li class="list-group-item" >수정 완료</li></a>
+						<li class="list-group-item" id="hr1">학력 수정</li>
+						<li class="list-group-item" id="hr2">경력 수정</li>
+						<li class="list-group-item" id="hr3">활동분야 수정</li>
+						<li class="list-group-item" id="hr4">자격증 수정</li>
+					</ul>
+				</div>
+			</div>
+
+			<div id="content">    
+            	<div id="content-container">
+            					
+
+				<!-- 직군선택 -->
+				<div id="hrList">
+				<div class="container mt-3 formsizing company-register">
+					<h1>인재정보 관리</h1>
+					<form id="hrJobForm">
+						<input type="hidden" class="hrNo" name="hrNo" value="">
+						<input type="hidden" id="jgCodeNo" name="jgCodeNo" value="">
+						<input type="hidden" id="jtCodeNo" name="jtCodeNo" value="">
+
+						<div class="dropdown input-group mt-3 mb-3">
+							<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">직군</button>
+							<ul class="dropdown-menu"></ul>
+							<input type="text" class="form-control textValue" placeholder="직군을 선택해주세요." disabled>
+						</div>
+								<div class="dropdown input-group mt-3 mb-3">
+									<button type="button" class="btn btn-primary dropdown-toggle"
+										data-bs-toggle="dropdown">직무</button>
+									<ul class="dropdown-menu"></ul>
+									<input type="text" class="form-control textValue"
+										placeholder="직군 선택 후, 직무를 선택해주세요." disabled>
+								</div>
+								<div class="dropdown input-group mt-3 mb-3">
+									<button type="button" class="btn btn-primary">재직회사명</button>
+									<input type="text" class="form-control textValue"
+										id="hrCurrCom" name="hrCurrCom" placeholder="재직 회사 명을 입력해주세요.">
+								</div>
+						
+								<div class="dropdown input-group mt-3 mb-3">
+									<button type="button" class="btn btn-primary">희망연봉</button>
+									<input type="number" class="form-control textValue" id="hrSal"
+										name="hrSal" placeholder="희망연봉을 입력해주세요.">
+								</div>
+								<div class="dropdown input-group mt-3 mb-3">
+									<button type="button" class="btn btn-primary">한마디</button>
+									<input type="text" class="form-control textValue" id="hrCmt"
+										name="hrCmt" placeholder="자신을 나타내는 한마디를 입력해주세요.">
+								</div>
+									<div class="dropdown input-group mt-3 mb-3">
+									<button type="button" class="btn btn-primary">자기소개</button>
+							    	<textarea class="form-control textValue" id="hrIntro"
+										name="hrIntro" rows="" cols=""></textarea>
+								
+								</div>
+								<div class="my-btn-box my-btn-box-cv" style="display: flex;flex-direction: row; margin-bottom: 8px;">
+								<div class="form-check">
+								  <input type="radio" class="form-check-input" id="radio1" name="hrOpen" value="1" checked>공개
+								  <label class="form-check-label" for="radio1"></label>
+								</div>
+								<div class="form-check">
+								  <input type="radio" class="form-check-input" id="radio2" name="hrOpen" value="0">비공개
+								  <label class="form-check-label" for="radio2"></label>
+								</div>
+								</div>
+								
+								<div class="my-btn-box my-btn-box-cv">
+									<button type="button" class="btn btn-outline-primary"
+										onclick="updateJobInfo();">등록하기</button>
+									<button type="reset" class="btn btn-outline-primary">RESET</button>
+								</div>
+							</form>
+					</div>
+				</div>
+
+				<!-- 요소 추가기점 -->
+                <div id="hrList1" class="hide">               
+                </div>
+                <div id="hrList2" class="hide">
+                </div>
+                <div id="hrList3" class="hide">
+                </div>
+                <div id="hrList4" class="hide">
+                </div> 
+                </div>	              		
+          	</div>
+        </div>   
+  </div>
+</body>
+
+
+<script>
+/* 	function backMypage(){
+		location.href = 'http://localhost/CodePeople/rehearsal/mainMypage.html';
+	}
+	function addEdu(){
+		
+		code = "";
+    code
+		window.open('/CodePeople/rehearsal/addEduForm.html','_blank');
+	}
+	function addCrr(){
+		window.open('/CodePeople/rehearsal/addCrrForm.html','_blank');
+	}
+	function addCert(){
+		window.open('/CodePeople/rehearsal/addCertForm.html','_blank');
+	}
+	function addPl(){
+		window.open('/CodePeople/rehearsal/addPlForm.html','_blank');
+	} */
+
+    
+    //화면 로딩 시 자동으로 hrNo를 저장하도록 한다.
+    const setHrNo = () => {
+    	 let hrNos = document.querySelectorAll('.hrNo');
+ 	    hrNos.forEach(hrNo =>{
+ 	    	hrNo.value = 1;
+ 	    	console.log(hrNo.getAttribute('value'));
+ 	    }) 	
+    }
+   
+	
+	
+	
+	/*  버튼클릭시ajax로 보내는 메스드들 */
+    const updateJobInfo = ( )=> {
+    		setHrNo();
+//     		$('#hrIntro').val($('#hrIntro').replaceAll('/\n/g', '').replaceAll('/\r/g','<br>'));
+//     		console.log($('#hrIntro').replaceAll('/\n/g', '').replaceAll('/\r/g','<br>'))
+		   let formDatas = $('#hrJobForm').serializeJSON();
+		   console.log(formDatas);
+		   $.ajax({
+			 url : '/CodePeople/HRUpdateJobInfo.do',
+			 type:'get',
+			 data : formDatas,
+			 dataType : 'json',
+			 success:function(res){
+				alert(res.result);
+			 },
+			 error:function(xhr){
+			console.log(`status : ${xhr.status}\n text: ${xhr.statusText}`);
+					
+			 }
+		   }) 
+	   }
+    
+    const insertEdu = () => {
+    		setHrNo();
+    	   let formDatas = $('#hrEduForm').serializeJSON();
+		   console.log(formDatas);
+		   $.ajax({
+			 url : '/CodePeople/EduInsert.do',
+			 type:'get',
+			 data : formDatas,
+			 dataType : 'json',
+			 success:function(res){
+				 alert(res.result);
+			 },
+			 error:function(xhr){
+			console.log(`status : ${xhr.status}\n text: ${xhr.statusText}`);
+					
+			 }
+		   })
+    }
+  const insertCrr = () => {
+	  setHrNo();
+		if($('#crrInService').prop("checked")){
+			$('#crrInService').val(1);
+		}else{
+			$('#crrInService').val(0);		
+		}
+	  	let formDatas = $('#hrCrrForm').serializeJSON();
+		console.log(formDatas);
+		$.ajax({
+			 url : '/CodePeople/CrrInsert.do',
+			 type:'get',
+			 data : formDatas,
+			 dataType : 'json',
+			 success:function(res){
+				 alert(res.result);
+			 },
+			 error:function(xhr){
+			console.log(`status : ${xhr.status}\n text: ${xhr.statusText}`);
+					
+			 }
+		   })
+  }
+  
+  const insertCert = () =>{
+	  setHrNo();
+	  let formDatas = $('#hrCertForm').serializeJSON();
+		console.log(formDatas);
+		$.ajax({
+			 url : '/CodePeople/CertInsert.do',
+			 type:'get',
+			 data : formDatas,
+			 dataType : 'json',
+			 success:function(res){
+				 alert(res.result);
+			 },
+			 error:function(xhr){
+			console.log(`status : ${xhr.status}\n text: ${xhr.statusText}`);
+					
+			 }
+		   })
+  }
+  
+  const insertPl = () =>{
+	  setHrNo();
+	  let formDatas = $('#hrPlForm').serializeJSON();
+		console.log(formDatas);
+	$.ajax({
+			 url : '/CodePeople/PlInsert.do',
+			 type:'get',
+			 data : formDatas,
+			 dataType : 'json',
+			 success:function(res){
+				 alert(res.result);
+			 },
+			 error:function(xhr){
+			console.log(`status : ${xhr.status}\n text: ${xhr.statusText}`);
+					
+			 }
+		   }) 
+  }
+    
+    
+    
+    //새로 생긴 항목값을 선택했을 때 적용하는 메서드  
+        $(document).on("click",".option",function(){
+	    	let option = this;
+        	let parent = option.parentElement.parentElement.parentElement.getAttribute('id');
+        	let category = option.getAttribute('category');
+        	
+        	if(parent =="hrJobForm"){
+        		if(category=='jtCodeNo'){
+	            	jtCodeNo.value = option.getAttribute('value');            	
+	           		let textValue = option.closest('.dropdown').querySelector('.textValue');
+	          		textValue.placeholder = option.getAttribute('idx');	            		
+            	}
+            		
+            }else if(parent =="hrCrrForm"){
+            		jgCodeNo.value = option.getAttribute('value');
+            		$('#jtCodeNoCrr').val(option.getAttribute('value'));	
+            		let textValue = option.closest('.dropdown').querySelector('.textValue');
+          			textValue.placeholder = option.getAttribute('idx')
+            
+            }else if(parent =="hrEduForm"){
+            	if(category=='eduCodeNo'){
+            		eduCodeNo.value = option.getAttribute('value');            	
+               		let textValue = option.closest('.dropdown').querySelector('.textValue');
+              		textValue.placeholder = option.getAttribute('idx');	  
+            	}
+            }else if(parent == "hrCertForm"){
+            	if(category =='certCodeNo'){
+            		certCodeNo.value = option.getAttribute('value');            	
+               		let textValue = option.closest('.dropdown').querySelector('.textValue');
+              		textValue.placeholder = option.getAttribute('idx');
+            	}
+            }else if(parent =="hrPlForm"){
+            	if(category =='plCodeNo'){
+            		plCodeNo.value = option.getAttribute('value');            	
+               		let textValue = option.closest('.dropdown').querySelector('.textValue');
+              		textValue.placeholder = option.getAttribute('idx');
+            	}
+            }
+              
+	    });
+	    
+    
+    //body js 파일 가져와서 작업 
+    window.onload = function addCertForm() {
+
+    	var hr1 = document.getElementById('hr1');
+    	var hr2 = document.getElementById('hr2');
+    	var hr3 = document.getElementById('hr3');
+    	var hr4 = document.getElementById('hr4');
+
+    hr1.addEventListener('click', function() {
+    text = `<div class="container mt-3 formsizing company-register">
+    		    <h1>학력 등록</h1>
+    						<form id="hrEduForm">
+    						<input type="hidden" class="hrNo" name="hrNo" value="">
+    						<input type="hidden" id="eduCodeNo" name="eduCodeNo" value="">
+    						<div class="dropdown input-group mt-3 mb-3">
+    							<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">학력</button>
+    							<ul class="dropdown-menu"></ul>
+    							<input type="text" class="form-control textValue" placeholder="학력을 선택해주세요." disabled>
+    						</div>
+    						<div class="dropdown input-group mt-3 mb-3">
+    							<button type="button" class="btn btn-primary">학교명</button>
+    							<input type="text" class="form-control textValue" id="eduSchNm"
+    								name="eduSchNm" placeholder="학교명을 입력해주세요.">
+    						</div>
+    						<div class="dropdown input-group mt-3 mb-3">
+							<button type="button" class="btn btn-primary">전공</button>
+							<input type="text" class="form-control textValue" id="eduMajor"
+								name="eduMajor" placeholder="전공을 입력해주세요.">
+							</div>
+							<div class="dropdown input-group mt-3 mb-3">
+							<button type="button" class="btn btn-primary">학점 총점</button>
+							<input type="number" class="form-control textValue" id="eduGraTot"
+								name="eduGraTot" placeholder="학점 총점을 입력해주세요.">
+							</div>
+							<div class="dropdown input-group mt-3 mb-3">
+							<button type="button" class="btn btn-primary">학점 평균</button>
+							<input type="number" class="form-control textValue" id="eduGraAvg"
+								name="eduGraAvg" placeholder="학점 평균을 입력해주세요.">
+							</div>
+    					   <div class="my-btn-box my-btn-box-cv">
+                          	<button type="button" class="btn btn-outline-primary" onclick="insertEdu();">등록하기</button>
+                          	 <button type="reset" class="btn btn-outline-primary" >RESET</button>
+                       		</div>
+    					</form>
+              </div>`;
+
+    		code = document.createElement('div');
+    		code.innerHTML = text
+    		hrList1.append(code);
+    	})
+
+    hr2.addEventListener('click', function() {
+
+    		text = `<div class="container mt-3 formsizing company-register">
+       					<h1>경력 등록</h1>
+        				<form id="hrCrrForm">
+        				<input type="hidden" class="hrNo" name="hrNo" value="">
+        				<input type="hidden" id="jgCodeNoCrr" name="jgCodeNo" value="">
+						<input type="hidden" id="jtCodeNoCrr" name="jtCodeNo" value="">
+						
+						<div class="dropdown input-group mt-3 mb-3">
+						<button type="button" class="btn btn-primary">회사명</button>
+						<input type="text" class="form-control textValue" id="crrCompNm"
+							name="crrCompNm" placeholder="회사명을 입력해주세요.">
+						</div>	
+						<div class="dropdown input-group mt-3 mb-3">
+						<button type="button" class="btn btn-primary">직급</button>
+						<input type="text" class="form-control textValue" id="crrRank"
+							name="crrRank" placeholder="직급을 입력해주세요.">
+					</div>
+					<div class="dropdown input-group mt-3 mb-3">
+					<button type="button" class="btn btn-primary">연차</button>
+					<input type="number" class="form-control textValue" id="crrYears"
+						name="crrYears" placeholder="경력을 입력해주세요. (년 단위).">
+				</div>
+    			      <div class="dropdown input-group mt-3 mb-3">
+						<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">직군</button>
+						<ul class="dropdown-menu"></ul>
+						<input type="text" class="form-control textValue" placeholder="직군을 선택해주세요." disabled>
+					</div>
+					<div class="dropdown input-group mt-3 mb-3">
+						<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">직무</button>
+						<ul class="dropdown-menu"></ul>
+						<input type="text" class="form-control textValue"
+							placeholder="직군 선택 후, 직무를 선택해주세요." disabled>
+					</div>	
+					
+					
+					
+
+					<div class="my-btn-box my-btn-box-cv" style="display: flex;flex-direction: row; margin-bottom: 8px;">
+					<div class="form-check">
+					  <input type="radio" class="form-check-input" id="radio3" name="crrInService" value="1" checked>재직중
+					  <label class="form-check-label" for="radio3"></label>
+					</div>
+					<div class="form-check">
+					  <input type="radio" class="form-check-input" id="radio4" name="crrInService" value="0">퇴사
+					  <label class="form-check-label" for="radio4"></label>
+					</div>
+					</div>
+					
+					   <div class="my-btn-box my-btn-box-cv">
+                     	<button type="button" class="btn btn-outline-primary" onclick="insertCrr();">등록하기</button>
+                     	 <button type="reset" class="btn btn-outline-primary" >RESET</button>
+                     
+                  		</div>			      
+    			    </form>
+						
+    			  </div>`;
+
+    		code = document.createElement('div');
+    		code.innerHTML = text
+    		hrList2.append(code);
+    	})
+
+    	hr3.addEventListener('click', function() {
+    		text = `
+    			<div class="container mt-3 formsizing company-register">
+				<h1>활동분야 등록</h1>
+				<form id="hrPlForm">
+				<input type="hidden" class="hrNo" name="hrNo" value="">
+				<input type="hidden" id="plCodeNo" name="plCodeNo" value="">
+				
+			      <div class="dropdown input-group mt-3 mb-3">
+					<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">활동분야</button>
+					<ul class="dropdown-menu"></ul>
+					<input type="text" class="form-control textValue" id="plCodeNm" placeholder="활동분야 선택해주세요." disabled>
+				</div>
+					   <div class="my-btn-box my-btn-box-cv">
+                  	<button type="button" class="btn btn-outline-primary" onclick="insertPl();">등록하기</button>
+                  	 <button type="reset" class="btn btn-outline-primary" >RESET</button>
+                  	
+               		</div>	
+                    </form>
+                                  	
+                </div>
+        </form>
+      </div>`;
+
+
+    		code = document.createElement('div');
+    		code.innerHTML = text
+    		hrList3.append(code);
+    	})
+
+    	hr4.addEventListener('click', function() {
+
+    		text = `<div class="container mt-3 formsizing company-register">
+					<h1>자격증 관리</h1>
+					<form id="hrCertForm">
+					<input type="hidden" class="hrNo" name="hrNo" value="">
+					<input type="hidden" id="certCodeNo" name="certCodeNo" value="">
+					
+				      <div class="dropdown input-group mt-3 mb-3">
+						<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">자격증</button>
+						<ul class="dropdown-menu"></ul>
+						<input type="text" class="form-control textValue" id="certCodeNm" placeholder="자격증을 선택해주세요." disabled>
+					</div>
+ 					   <div class="my-btn-box my-btn-box-cv">
+                      	<button type="button" class="btn btn-outline-primary" onclick="insertCert();">등록하기</button>
+                   	 <button type="reset" class="btn btn-outline-primary" >RESET</button>
+                 
+                   		</div>	
+                        </form>
+                                      	
+                    </div>`;
+
+    		code = document.createElement('div');
+    		code.innerHTML = text
+    		hrList4.append(code);
+    	})
+    }
+
+</script>
+
+
+ 
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="edu">
+	<resultMap class="kr.or.ddit.edu.vo.EduVO" id="EduMap">
+		<result column="EDU_NO" property="eduNo"/>
+		<result column="EDU_CODE_NO" property="eduCodeNo"/>
+		<result column="EDU_CODE_NM" property="eduCodeNm"/>
+		<result column="EDU_SCH_NM" property="eduSchNm"/>
+		<result column="EDU_MAJOR" property="eduMajor"/>
+		<result column="EDU_GRA_TOT" property="eduGraTot"/>
+		<result column="EDU_GRA_AVG" property="eduGraAvg"/>
+	</resultMap>
+	
+	<resultMap class="kr.or.ddit.edu.vo.EduCodeVO" id="EduCodeMap">
+		<result column="EDU_CODE_NO" property="eduCodeNo"/>
+		<result column="EDU_CODE_NM" property="eduCodeNm"/>
+	</resultMap>	
+	<select id="selectEduCodeList" resultMap="EduCodeMap">
+		SELECT * FROM EDU_CODE
+	</select>
+	
+	
+		
+	
+	 <insert id="insertEdu" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+	 INSERT INTO EDU 
+ 	 VALUES(EDU_SEQ.NEXTVAL, #eduCodeNo#,#eduSchNm#,#eduMajor#,#eduGraTot#,#eduGraAvg#)
+ 	 
+ 	 <selectKey keyProperty="eduNo" resultClass="Integer">
+ 					select EDU_SEQ.CURRVAL FROM DUAL							
+	 </selectKey>
+	</insert>
+	
+	<insert id="insertEduHR" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+		INSERT INTO EDU_HR (EDU_NO, HR_NO)
+		 VALUES (#eduNo#,#hrNo#)
+	</insert>
+	
+	
+	<delete id="deleteEdu" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+		DELETE FROM EDU
+		WHERE EDU_NO = #eduNo#
+		
+	</delete>
+	
+	<delete id="deleteEduHR" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+		DELETE FROM EDU_HR
+		WHERE EDU_NO = #eduNo#
+		  AND HR_NO = #hrNo#
+	
+	</delete>
+	
+	<select id="selectEdu" parameterClass="int" resultMap="EduMap">
+	
+		SELECT A.EDU_NO,
+		       B.EDU_CODE_NO,
+		       NVL(B.EDU_CODE_NM,0) AS EDU_CODE_NM,
+		       NVL(A.EDU_SCH_NM,0) AS EDU_SCH_NM,
+		       NVL(A.EDU_MAJOR,0) AS EDU_MAJOR,
+		       NVL(A.EDU_GRA_TOT,0) AS EDU_GRA_TOT,
+		       NVL(A.EDU_GRA_AVG,0) AS EDU_GRA_AVG
+		
+		FROM EDU A, EDU_CODE B
+		WHERE A.EDU_CODE_NO = B.EDU_CODE_NO
+		    AND A.EDU_NO IN  (SELECT EDU_NO 
+		                            FROM EDU_HR
+		                         WHERE HR_NO = #hrNo#) 
+	</select>
+	
+	
+	
+</sqlMap>

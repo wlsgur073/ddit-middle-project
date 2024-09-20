@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="board">
+	<resultMap class="java.util.HashMap" id="BoardListMap">
+		<result property="BOARD_NO" column="BOARD_NO"/>
+		<result property="BOARD_CODE_NO" column="BOARD_CODE_NO"/>
+		<result property="BOARD_TITLE" column="BOARD_TITLE"/>
+		<result property="BOARD_HIT" column="BOARD_HIT"/>
+		<result property="BOARD_LIKE" column="BOARD_LIKE"/>
+		<result property="BOARD_REPL" column="BOARD_REPL"/>
+		<result property="BOARD_CONT" column="BOARD_CONT"/>
+		<result property="BOARD_DATE" column="BOARD_DATE"/>
+		<result property="MEM_ID" column="MEM_ID"/>
+	</resultMap>
+
+	<resultMap class="kr.or.ddit.board.vo.BoardVO" id="BoardMap">
+		<result column="BOARD_NO" property="boardNo" />
+		<result column="BOARD_CODE_NO" property="boardCodeNo" />
+		<result column="BOARD_TITLE" property="boardTitle" />
+		<result column="BOARD_CONT" property="boardCont" />
+		<result column="MEM_NO" property="memNo" />
+		<result column="BOARD_HIT" property="boardHit" />
+		<result column="BOARD_REPT" property="boardRept" />
+		<result column="BOARD_LIKE" property="boardLike" />
+		<result column="BOARD_REPL" property="boardRepl" />
+		<result column="BOARD_POP" property="boardPop" />
+		<result column="BOARD_DATE" property="boardDate" />
+		<result column="BOARD_ACTIVE" property="boardActive" />
+		<result column="BOARD_HEAD" property="boardHead" />
+		<result column="ATCH_FILE_ID" property="atchFileId" />
+	</resultMap>
+	
+	<resultMap class="java.util.HashMap" id="ReplyListMap">
+		<result property="repNo" column="REP_NO" />
+		<result property="boardNo" column="BOARD_NO" />
+		<result property="repLike" column="REP_LIKE" />
+		<result property="repCont" column="REP_CONT" />
+		<result property="repDate" column="REP_DATE" />
+		<result property="repRept" column="REP_REPT" />
+		<result property="memId" column="MEM_ID" />
+	</resultMap>
+	
+	<resultMap class="kr.or.ddit.board.vo.ReplyVO" id="ReplyMap">
+		<result property="repNo" column="REP_NO"/>
+		<result property="boardCodeNo" column="BOARD_CODE_NO" />
+		<result property="boardNo" column="BOARD_NO" />
+		<result property="repSeq" column="REP_SEQ" />
+		<result property="repLike" column="REP_LIKE" />
+		<result property="repCont" column="REP_CONT" />
+		<result property="memNo" column="MEM_NO" />
+		<result property="repDate" column="REP_DATE" />
+		<result property="repPrnt" column="REP_PRNT" />
+		<result property="repRept" column="REP_REPT" />
+	</resultMap>
+	
+	
+
+
+	<select id="boardPagingList" parameterClass="kr.or.ddit.cmm.vo.BoardPagingVO"
+	        resultMap="BoardMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM BOARD
+		                 ORDER BY BOARD_NO DESC) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+	<select id="getTotalBoardCount" resultClass="int">
+		SELECT COUNT(*)
+		  FROM BOARD
+		 WHERE BOARD_ACTIVE = 1
+	</select>
+	
+	<select id="selectAll" resultMap="BoardListMap">
+	
+		SELECT * FROM V_BOARDLIST
+	
+	</select>
+	
+	<!-- BOARD_CODE_NO, MEM_ID는 테스트용 임의의 값 넣은 것 -->
+	<insert id="boardInsert" parameterClass="kr.or.ddit.board.vo.BoardVO">
+	
+		 INSERT  INTO BOARD
+       			 (BOARD_NO,              BOARD_CODE_NO,      BOARD_TITLE,
+         		  BOARD_CONT,            MEM_NO,             BOARD_DATE,
+         	      BOARD_ACTIVE)
+		  VALUES  
+		  		 (BOARD_SEQ.NEXTVAL,     #boardCodeNo#,      #boardTitle#,
+         		  #boardCont#,           #memNo#,             SYSDATE,
+                  1)
+				
+				<selectKey keyProperty="boardNo" resultClass="Integer">
+				
+					select board_seq.currval from dual
+				
+				</selectKey>
+				
+	</insert>
+	
+	<update id="boardUpdate" parameterClass="kr.or.ddit.board.vo.BoardVO">
+		
+		UPDATE BOARD
+		   SET
+		   		BOARD_TITLE = #boardTitle#,
+		   		BOARD_CONT = #boardCont#
+		  WHERE BOARD_NO = #boardNo#
+		  		<!-- 게시글 식별 조건에 따른 수정 -->
+		  		AND BOARD_CODE_NO = #boardCodeNo#
+				 	
+	</update>
+	
+	<delete id="boardDelete" parameterClass="kr.or.ddit.board.vo.BoardVO">
+	
+		DELETE FROM BOARD WHERE BOARD_NO = #boardNo#
+			  		<!-- 게시글 식별 조건에 따른 수정 -->
+		  		AND BOARD_CODE_NO = #boardCodeNo#
+	</delete>
+	
+	<select id="replySelect" resultMap="ReplyListMap">
+	
+		 SELECT * FROM V_REPLYLIST  
+	
+	</select>
+	
+	<!-- 댓글을 입력하는 쿼리, 대댓글일 경우 서블릿에서 repPrnt값을 설정하고 실행한다 -->
+	<insert id="replyInsert" parameterClass="kr.or.ddit.board.vo.ReplyVO">
+		
+		INSERT INTO REPLY (
+		    REP_NO,     BOARD_CODE_NO,    BOARD_NO,
+		    REP_SEQ,    REP_LIKE,   	  REP_CONT,
+		    MEM_NO,     REP_DATE,    	  REP_PRNT,
+		    REP_REPT
+		) VALUES (
+		    REPLY_SEQ.NEXTVAL,       #boardCodeNo#,       #boardNo#,
+		    REPLY_SERIAL.NEXTVAL,          0,             #repCont#,
+		    #memNo#,         TO_CHAR(SYSDATE, 'YYYYMMDD'),   #repPrnt#,
+		    0
+		)
+		
+		<selectKey keyProperty="repNo" resultClass="Integer">
+			SELECT REPLY_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+		
+	</insert>
+	
+	<!-- 댓글을 수정하는 쿼리 -->	
+	<update id="replyUpdate" parameterClass="kr.or.ddit.board.vo.ReplyVO">
+		
+		UPDATE REPLY
+		   SET REP_CONT = #repCont#
+		 WHERE REP_NO = #repNo#
+		 
+	</update>
+	
+	<!-- 댓글을 삭제하는 쿼리 -->
+	<delete id="replyDelete" parameterClass="Integer">
+		DELETE REPLY
+		 WHERE REP_NO = #repNo#
+	</delete>
+	
+	<!-- 대댓글 리트스 쿼리 -->
+	<select id="replyCommentSelect" resultMap="ReplyListMap">
+	
+		
+		
+	</select>
+	
+	<select id="countBlahBoard" resultClass="int">
+		        SELECT COUNT(*)
+                  FROM V_BOARDLIST
+                 WHERE BOARD_CODE_NO = 3
+	</select>
+	
+	
+	<select id="blahBoardPagingList" parameterClass="kr.or.ddit.cmm.vo.BoardPagingVO"
+	        resultMap="BoardListMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM V_BOARDLIST
+		                 WHERE BOARD_CODE_NO = 3
+		                 ORDER BY BOARD_NO DESC) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+	<select id="countQuestionBoard" resultClass="int">
+		        SELECT COUNT(*)
+                  FROM V_BOARDLIST
+                 WHERE BOARD_CODE_NO = 1
+	</select>
+	
+	
+	<select id="QuestionBoardPagingList" parameterClass="kr.or.ddit.cmm.vo.BoardPagingVO"
+	        resultMap="BoardListMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM V_BOARDLIST
+		                 WHERE BOARD_CODE_NO = 1
+		                 ORDER BY BOARD_NO DESC) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+	<select id="countCareerBoard" resultClass="int">
+		        SELECT COUNT(*)
+                  FROM V_BOARDLIST
+                 WHERE BOARD_CODE_NO = 5
+	</select>
+	
+	
+	<select id="CareerBoardPagingList" parameterClass="kr.or.ddit.cmm.vo.BoardPagingVO"
+	        resultMap="BoardListMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM V_BOARDLIST
+		                 WHERE BOARD_CODE_NO = 5
+		                 ORDER BY BOARD_NO DESC) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+	<select id="countLifeBoard" resultClass="int">
+		        SELECT COUNT(*)
+                  FROM V_BOARDLIST
+                 WHERE BOARD_CODE_NO = 2
+	</select>
+	
+	
+	<select id="LifeBoardPagingList" parameterClass="kr.or.ddit.cmm.vo.BoardPagingVO"
+	        resultMap="BoardListMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM V_BOARDLIST
+		                 WHERE BOARD_CODE_NO = 2
+		                 ORDER BY BOARD_NO DESC) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	<select id="countMeetUpBoard" resultClass="int">
+		        SELECT COUNT(*)
+                  FROM V_BOARDLIST
+                 WHERE BOARD_CODE_NO = 4
+	</select>
+	
+	
+	<select id="MeetUpBoardPagingList" parameterClass="kr.or.ddit.cmm.vo.BoardPagingVO"
+	        resultMap="BoardListMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM V_BOARDLIST
+		                 WHERE BOARD_CODE_NO = 4
+		                 ORDER BY BOARD_NO DESC) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+	
+	<!-- 
+		 게시글 수정/삭제권한을 확인하는 쿼리
+		 < 사용방법 > 
+		 현재 조회하고 있는 글의 board_no와 board_code_no 그리고 현재 로그인 된 회원의 mem_no를
+		 boardVO에 넣어서 호출  (서블릿에서 수행)
+		 < 사용시점 >
+		 1안 : 게시글 조회시 호출하여 수정, 삭제버튼을 로그인 상태에 따라 보여주거나 보여주지 않는다.
+		 2안 : 게시글의 삭제 혹은 수정 버튼 클릭시 호출, 권한이 없을 시 alert을 띄운다.
+		  
+		 권한이 있을 때 1, 없을 때 0 리턴	
+	-->	 
+	<select id="checkBoardRight" parameterClass="kr.or.ddit.board.vo.BoardVO"
+			resultClass="Integer">
+		SELECT COUNT(*)
+		  FROM BOARD
+		 WHERE MEM_NO = #memNo#
+		 	   AND BOARD_NO = #boardNo#
+		 	   AND BOARD_CODE_NO = #boardCodeNo#
+	</select>
+	<!-- 
+		 댓글 수정/삭제권한을 확인하는 쿼리
+		 < 사용방법 > 
+		 현재 수정/삭제하려는 댓글의 rep_no 그리고 현재 로그인 된 회원의 mem_no를
+		 ReplyVO에 넣어서 호출 (서블릿에서 수행)
+		 < 사용시점 >
+		 1안 : 댓글 조회시 호출하여 수정, 삭제버튼을 로그인 상태에 따라 보여주거나 보여주지 않는다.
+		 2안 : 댓글의 삭제 혹은 수정 버튼 클릭시 호출, 권한이 없을 시 alert을 띄운다.
+		  
+		 권한이 있을 때 1, 없을 때 0 리턴	
+	-->	 
+	<select id="checkReplyRight" parameterClass="kr.or.ddit.board.vo.ReplyVO"
+			resultClass="Integer">
+		SELECT COUNT(*)
+		  FROM REPLY
+		 WHERE MEM_NO = #memNo#
+		 	   AND REP_NO = #repNo#
+	</select>
+	
+	<!-- 게시글 조회수 증가 -->
+	<update id="addBoardHit" parameterClass="kr.or.ddit.board.vo.BoardVO">
+		UPDATE BOARD
+		   SET BOARD_HIT = NVL(BOARD_HIT, 0) + 1
+		 WHERE BOARD_NO = #boardNo#
+		 	   AND BOARD_CODE_NO = #boardCodeNo#
+	</update>
+	
+	<!-- 게시글 신고 증가 -->
+	<update id="addBoardRept" parameterClass="kr.or.ddit.board.vo.BoardVO">
+		UPDATE BOARD
+		   SET BOARD_REPT = NVL(BOARD_REPT, 0) + 1
+		 WHERE BOARD_NO = #boardNo#
+		 	   AND BOARD_CODE_NO = #boardCodeNo#
+	</update>
+	
+	<!-- 게시글 좋아요 증가 -->
+	<update id="addBoardLike" parameterClass="kr.or.ddit.board.vo.BoardVO">
+		UPDATE BOARD
+		   SET BOARD_LIKE = NVL(BOARD_LIKE, 0) + 1
+		 WHERE BOARD_NO = #boardNo#
+		       AND BOARD_CODE_NO = #boardCodeNo#
+	</update>	
+	
+	<!-- 댓글 신고 증가 -->
+	<update id="addReplyRept" parameterClass="Integer">
+		UPDATE REPLY
+		   SET REP_REPT = NVL(REP_REPT, 0) + 1
+		 WHERE REP_NO = #replyNo#
+	</update>
+	
+	<update id="addReplyLike" parameterClass="Integer">
+		UPDATE REPLY
+		   SET REP_LIKE = NVL(REP_LIKE, 0) + 1
+		 WHERE REP_NO = #replyNo#
+	</update>	
+	
+</sqlMap>
+
+
+
+
+
+
+
+

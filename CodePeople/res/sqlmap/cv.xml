@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cv">
+	<resultMap class="kr.or.ddit.cv.vo.CVVO" id="CVMap">
+		<result column="CV_NO" property="cvNo"/>
+		<result column="HR_NO" property="hrNo"/>
+		<result column="CV_OPEN" property="cvOpen"/>
+		<result column="CV_SAL" property="cvSal"/>
+		<result column="CV_CMT" property="cvCmt"/>
+		<result column="CV_CNT" property="cvCnt"/>
+		<result column="ATCH_FILE_ID" property="atchFileId"/>
+	</resultMap>
+	<select id="cvPagingList" parameterClass="kr.or.ddit.cmm.vo.CVPagingVO"
+	        resultMap="CVMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM CV) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+	<select id="getTotalCVCount" resultClass="int">
+		SELECT COUNT(*)
+		  FROM CV
+	</select>
+	
+	
+	<select id="selectCV" parameterClass="int" resultMap="CVMap">
+		 	 SELECT CV_NO,
+			        HR_NO,
+			        CV_OPEN,
+			        CV_SAL,
+			        CV_CMT,
+			        CV_CNT,
+			        ATCH_FILE_ID
+			  FROM CV
+			 WHERE HR_NO = #hrNo#
+		</select>
+	
+</sqlMap>

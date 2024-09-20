@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="certification">
+	<resultMap class="kr.or.ddit.certification.vo.CertificationVO" id="CertificationMap">
+		<result column="CERT_CODE_NO" property="certCodeNo"/>
+		<result column="CERT_CODE_NM" property="certCodeNm"/>
+	</resultMap>
+
+
+
+
+
+
+
+	<select id="selectCertList" resultMap="CertificationMap">
+		SELECT * FROM CERTIFICATION
+	</select>
+	
+	
+	
+	<update id="insertCert" parameterClass="kr.or.ddit.hr.vo.HRInfoVO">
+	  INSERT INTO CERT_HR (CERT_CODE_NO,HR_NO)
+		VALUES  (#certCodeNo#,#hrNo#)
+		
+	</update>
+	
+	
+	<select id="selectCert" parameterClass="int" resultMap="CertificationMap">
+	
+	    SELECT  CERT_CODE_NO,
+         		CERT_CODE_NM
+   		 FROM 	CERTIFICATION
+     	 WHERE CERT_CODE_NO IN (SELECT CERT_CODE_NO
+                            FROM CERT_HR
+                            WHERE HR_NO = #hrNo#)
+                                                     
+	</select>
+	
+	<delete id="deleteCert" parameterClass="kr.or.ddit.certification.vo.CertHRVO">
+	
+		DELETE FROM CERT_HR
+		WHERE HR_NO = #hrNo#
+		AND CERT_CODE_NO =#certCodeNo#
+	
+	
+	</delete>
+	
+	
+	
+	
+</sqlMap>

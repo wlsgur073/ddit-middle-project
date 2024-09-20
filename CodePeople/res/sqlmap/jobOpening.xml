@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="jobOpening">
+
+	<resultMap class="kr.or.ddit.jobOpening.vo.JobOpeningVO" id="JobOpeningMap">
+		<result column="JO_NO" property="joNo"/>
+		<result column="JO_TITLE" property="joTitle"/>
+		<result column="COM_NO" property="comNo"/>
+		<result column="JO_SDATE" property="joSdate"/>
+		<result column="JO_EDATE" property="joEdate"/>
+		<result column="JG_CODE_NO" property="jgCodeNo"/>
+		<result column="JT_CODE_NO" property="jtCodeNo"/>
+		<result column="JO_SAL" property="joSal"/>
+		<result column="JO_RANK" property="joRank"/>
+		<result column="JO_MTHD" property="joMthd"/>
+		<result column="JO_LINK" property="joLink"/>
+		<result column="JO_CLIP" property="joClip"/>
+		<result column="JO_FILE" property="joFile"/>
+		<result column="PROV_CODE_NO" property="provCodeNo"/>
+		<result column="CITY_CODE_NO" property="cityCodeNo"/>
+		<result column="PL_CODE_NO" property="plCodeNo"/>
+	</resultMap>	
+	
+	<resultMap id="jobOpeningCardMap" class="java.util.HashMap">
+		<result column="RNUM" property="RNUM"/>
+		<result column="COM_NM" property="COM_NM"/>
+		<result column="COM_INTRO" property="COM_INTRO"/>
+		<result column="JO_TITLE" property="JO_TITLE"/>
+		<result column="JO_SDATE" property="JO_SDATE"/>
+		<result column="JO_EDATE" property="JO_EDATE"/>
+		<result column="JG_CODE_NM" property="JG_CODE_NM"/>
+		<result column="JT_CODE_NM" property="JT_CODE_NM"/>
+		<result column="JO_SAL_TYPE_NM" property="JO_SAL_TYPE_NM"/>
+		<result column="JO_NO" property="JO_NO"/>
+	</resultMap>
+	
+	<resultMap id="JOCardMap" class="kr.or.ddit.jobOpening.vo.JOCardVO">
+		<result property="comNm" column="COM_NM"/>
+		<result property="comHpg" column="COM_HPG"/>
+		<result property="comFav" column="COM_FAV"/>
+		<result property="comIntro" column="COM_INTRO"/>
+		<result property="joTitle" column="JO_TITLE"/>
+		<result property="joClip" column="JO_CLIP"/>
+		<result property="joMthd" column="JO_MTHD"/>
+		<result property="jgCodeNm" column="JG_CODE_NM"/>
+		<result property="jtCodeNm" column="JT_CODE_NM"/>
+		<result property="plCodeNm" column="PL_CODE_NM"/>
+		<result property="joRank" column="JO_RANK"/>
+		<result property="joSal" column="JO_SAL"/>
+		<result property="joSdate" column="JO_SDATE"/>
+		<result property="joEdate" column="JO_EDATE"/>
+		<result property="cityCodeNm" column="CITY_CODE_NM"/>
+		<result property="provCodeNm" column="PROV_CODE_NM"/>
+		<result property="joNo" column="JO_NO"/>
+		<result property="joSalTypeNm" column="JO_SAL_TYPE_NM"/>
+		<result property="joState" column="JO_STATE"/>
+		<result property="joStateNm" column="JO_STATE_NM"/>
+	</resultMap>
+	
+	<resultMap id="applyMap" class="kr.or.ddit.jobOpening.vo.ApplyVO">
+		<result property="applNo" column="APPL_NO"/>
+		<result property="hrNo" column="HR_NO"/>
+		<result property="joNo" column="JO_NO"/>
+		<result property="jtNo" column="JT_NO"/>
+	</resultMap>
+	
+	<resultMap class="kr.or.ddit.schedule.vo.ScheduleVO" id="ScheduleMap">
+		<result property="scheNo" column="SCHE_NO"/>
+		<result property="calTag" column="CAL_TAG"/>
+		<result property="calTagColor" column="CAL_TAG_COLOR"/>
+		<result property="scheCont" column="SCHE_CONT"/>
+		<result property="scheSdate" column="SCHE_SDATE"/>
+		<result property="scheEdate" column="SCHE_EDATE"/>
+		<result property="joNo" column="JO_NO"/>
+	</resultMap>
+	
+	<select id="getTotalJobOpeningCount" resultClass="int">
+		SELECT COUNT(*)
+		  FROM JOB_OPENING
+	</select>
+	
+	<select id="jobOpeningPagingList" parameterClass="kr.or.ddit.cmm.vo.JobOpeningPagingVO"
+			resultMap="JobOpeningMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM JOB_OPENING) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+	<select id="jobOpeningCardList" parameterClass="kr.or.ddit.cmm.vo.JobOpeningPagingVO"
+			resultMap="jobOpeningCardMap">
+		SELECT AA.*
+		  FROM (SELECT ROWNUM AS RNUM, A.*  
+		          FROM (SELECT *
+		                  FROM (SELECT  A.COM_NM,    A.COM_INTRO,    B.JO_TITLE,
+		                                B.JO_SDATE,  B.JO_EDATE,    C.JG_CODE_NM,
+		                                D.JT_CODE_NM,B.JO_NO,
+		                                DECODE(FN_GET_SAL_TYPE_JO(B.JO_NO), '0', '정보없음',
+		                                                                    '1', '0-2000만원',
+		                                                                    '2', '2000-2500만원',
+		                                                                    '3', '2500-3000만원',
+		                                                                    '4', '3000-4000만원',
+		                                                                    '5', '4000-5000만원',
+		                                                                    '6', '5000만원 이상') AS JO_SAL_TYPE_NM
+		                                                                    
+		                          FROM COMPANY A
+		                        INNER JOIN JOB_OPENING B ON(A.COM_NO = B.COM_NO)
+		                        INNER JOIN JOB_GROUP C ON(A.JG_CODE_NO = C.JG_CODE_NO)
+		                        INNER JOIN JOB_TITLE D ON(C.JG_CODE_NO = D.JT_CODE_NO)
+		                        ORDER BY B.JO_NO) E) A) AA
+		 WHERE AA.RNUM BETWEEN #firstRecNo# AND #lastRecNo#
+	</select>
+	
+		<select id="jobOpeningCardSearchList" parameterClass="java.util.HashMap"
+			resultMap="jobOpeningCardMap">
+				SELECT AA.*
+				  FROM (SELECT ROWNUM AS RNUM, A.*  
+				          FROM (SELECT *
+				                  FROM (SELECT  A.COM_NM,    A.COM_INTRO,    B.JO_TITLE,
+				                                B.JO_SDATE,  B.JO_EDATE,    C.JG_CODE_NM,
+				                                D.JT_CODE_NM,B.JO_NO,
+				                                DECODE(FN_GET_SAL_TYPE_JO(B.JO_NO), '0', '정보없음',
+				                                                                    '1', '0-2000만원',
+				                                                                    '2', '2000-2500만원',
+				                                                                    '3', '2500-3000만원',
+				                                                                    '4', '3000-4000만원',
+				                                                                    '5', '4000-5000만원',
+				                                                                    '6', '5000만원 이상') AS JO_SAL_TYPE_NM
+				                                                                    
+				                          FROM COMPANY A
+				                        INNER JOIN JOB_OPENING B ON(A.COM_NO = B.COM_NO)
+				                        INNER JOIN JOB_GROUP C ON(A.JG_CODE_NO = C.JG_CODE_NO)
+				                        INNER JOIN JOB_TITLE D ON(C.JG_CODE_NO = D.JT_CODE_NO)
+				                        INNER JOIN V_JO_SEARCH E ON(B.JO_NO = E.JO_NO)
+				                        WHERE 1 = 1
+				                        <isNotEmpty property="JG_CODE_NO">
+									      AND E.JG_CODE_NO = #JG_CODE_NO# 
+									    </isNotEmpty>
+									    <isNotEmpty property="JT_CODE_NO">
+									      AND E.JT_CODE_NO = #JT_CODE_NO# 
+									    </isNotEmpty>
+									    <isNotEmpty property="PL_CODE_NO">
+									      AND E.PL_CODE_NO = #PL_CODE_NO# 
+									    </isNotEmpty>
+									    <isNotEmpty property="SAL_TYPE">
+									      AND E.SAL_TYPE = #SAL_TYPE# 
+									    </isNotEmpty>
+									    <isNotEmpty property="PROV_CODE_NO">
+									      AND E.PROV_CODE_NO = #PROV_CODE_NO# 
+									    </isNotEmpty>
+									    <isNotEmpty property="CITY_CODE_NO">
+									      AND E.CITY_CODE_NO = #CITY_CODE_NO# 
+									    </isNotEmpty>
+									    <isNotEmpty property="STATE">
+									      AND E.STATE = #STATE# 
+									    </isNotEmpty>									    								    
+				                        ) F) A) AA
+				 WHERE AA.RNUM BETWEEN #FIRST_REC_NO# AND #LAST_REC_NO#
+	</select>
+	
+	<select id="getTotalJobOpeningSearchCount" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT COUNT(*)
+          FROM (SELECT  A.COM_NM,    A.COM_INTRO,    B.JO_TITLE,
+                        B.JO_SDATE,  B.JO_EDATE,    C.JG_CODE_NM,
+                        D.JT_CODE_NM,
+                        DECODE(FN_GET_SAL_TYPE_JO(B.JO_NO), '0', '정보없음',
+                                                            '1', '0-2000만원',
+                                                            '2', '2000-2500만원',
+                                                            '3', '2500-3000만원',
+                                                            '4', '3000-4000만원',
+                                                            '5', '4000-5000만원',
+                                                            '6', '5000만원 이상') AS JO_SAL_TYPE_NM
+                                                            
+                  FROM COMPANY A
+	                INNER JOIN JOB_OPENING B ON(A.COM_NO = B.COM_NO)
+	                INNER JOIN JOB_GROUP C ON(A.JG_CODE_NO = C.JG_CODE_NO)
+	                INNER JOIN JOB_TITLE D ON(C.JG_CODE_NO = D.JT_CODE_NO)
+	                INNER JOIN V_JO_SEARCH E ON(B.JO_NO = E.JO_NO)
+	                WHERE 1 = 1
+                    	<isNotEmpty property="JG_CODE_NO">
+					      AND E.JG_CODE_NO = #JG_CODE_NO# 
+					    </isNotEmpty>
+					    <isNotEmpty property="JT_CODE_NO">
+					      AND E.JT_CODE_NO = #JT_CODE_NO# 
+					    </isNotEmpty>
+					    <isNotEmpty property="PL_CODE_NO">
+					      AND E.PL_CODE_NO = #PL_CODE_NO# 
+					    </isNotEmpty>
+					    <isNotEmpty property="SAL_TYPE">
+					      AND E.SAL_TYPE = #SAL_TYPE# 
+					    </isNotEmpty>
+					    <isNotEmpty property="PROV_CODE_NO">
+					      AND E.PROV_CODE_NO = #PROV_CODE_NO# 
+					    </isNotEmpty>
+					    <isNotEmpty property="CITY_CODE_NO">
+					      AND E.CITY_CODE_NO = #CITY_CODE_NO# 
+					    </isNotEmpty>
+					    <isNotEmpty property="STATE">
+					      AND E.STATE = #STATE# 
+					    </isNotEmpty>
+					    )								    								    
+	</select>
+	
+	<!-- 채용공고 등록 -->
+	<!-- 채용공고가 등록되면 일정에도 같이 등록된다, 이때 생성된 일정은 회원 외래키가 없다 -->
+	<!-- 동시에 생성된 일정에 채용공고라는 태그를 달아준다 -->
+	<!-- 이는 채용공고 캘린더에서 채용공고라는 태그를 단 일정만을 조회 할 때 쓰일 것이다 -->
+	
+	<insert id="insertJobOpening" parameterClass="kr.or.ddit.jobOpening.vo.JobOpeningVO">
+		INSERT INTO JOB_OPENING
+               (JO_NO,                     JO_TITLE,           COM_NO,
+                JO_SDATE,                  JO_EDATE,           JG_CODE_NO,
+                JT_CODE_NO,                JO_SAL,             JO_RANK,
+                JO_MTHD,                   JO_LINK,            
+                PL_CODE_NO,                PROV_CODE_NO,       CITY_CODE_NO)
+        VALUES (JOB_OPENING_SEQ.NEXTVAL,   #joTitle#,          #comNo#,
+                #joSdate#,                 #joEdate#,          #jgCodeNo#,
+                #jtCodeNo#,                #joSal#,            #joRank#,
+                #joMthd#,                  #joLink#,           
+                #plCodeNo#,                #provCodeNo#,       #cityCodeNo#)
+                
+		<selectKey keyProperty="joNo" resultClass="int">
+			SELECT JOB_OPENING_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<!-- 채용공고 등록과 항상 같이 실행된다 -->
+	
+	<insert id="insertJoSchedule" parameterClass="kr.or.ddit.jobOpening.vo.JobOpeningVO">
+		INSERT  INTO SCHEDULE
+		        (SCHE_NO,               SCHE_CODE)
+		VALUES  (SCHEDULE_SEQ.NEXTVAL,  1)
+		<selectKey keyProperty="scheNo" resultClass="int">
+			SELECT SCHEDULE_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<!-- 채용공고 등록과 항상 같이 실행된다 -->
+	
+	<insert id="insertScheJo"  parameterClass="kr.or.ddit.schedule.vo.ScheduleVO">
+		INSERT  INTO SCHE_JO
+		        (SCHE_NO,               JO_NO)
+		VALUES  (#scheNo#,              #joNo#)	
+	</insert>
+	
+	<!-- 채용공고 등록과 항상 같이 실행된다 -->
+	
+	<insert id="addJoScheTag" parameterClass="int">
+			INSERT  INTO SCHED_TAG
+			        (SCHE_NO,               CAL_TAG)
+			VALUES  (#scheNo#,  5)
+	</insert>
+	
+	
+	<select id="joCardDetail" parameterClass="Integer" resultMap="JOCardMap">
+		SELECT E.COM_NM,        E.COM_HPG,      E.COM_FAV,
+		       E.COM_INTRO,     A.JO_TITLE,     A.JO_CLIP,
+		       A.JO_MTHD,       B.JG_CODE_NM,   C.JT_CODE_NM,
+		       D.PL_CODE_NM,    A.JO_RANK,      A.JO_SAL,
+		       A.JO_SDATE,      A.JO_EDATE,     G.CITY_CODE_NM,
+		       F.PROV_CODE_NM,  A.JO_NO,
+		       DECODE(FN_GET_SAL_TYPE_JO(A.JO_NO), '0', '정보없음',
+				                                    '1', '0-2000만원',
+				                                    '2', '2000-2500만원',
+				                                    '3', '2500-3000만원',
+				                                    '4', '3000-4000만원',
+				                                    '5', '4000-5000만원',
+				                                    '6', '5000만원 이상') AS JO_SAL_TYPE_NM,
+		       FN_GET_STATE_JO(A.JO_NO) AS JO_STATE,
+		       DECODE(FN_GET_STATE_JO(A.JO_NO), '0', '마감',
+			                                    '1',    '진행중',
+			                                    '2',    '예정')   AS JO_STATE_NM
+		  FROM JOB_OPENING A
+		       INNER JOIN JOB_GROUP B ON (A.JG_CODE_NO = B.JG_CODE_NO)
+		       INNER JOIN JOB_TITLE C ON (A.JT_CODE_NO = C.JT_CODE_NO
+		                              AND B.JG_CODE_NO = C.JG_CODE_NO)
+		       INNER JOIN PROG_LANG D ON (A.PL_CODE_NO = D.PL_CODE_NO)
+		       INNER JOIN COMPANY   E ON (A.COM_NO = E.COM_NO)
+		       INNER JOIN PROV      F ON (A.PROV_CODE_NO = F.PROV_CODE_NO)
+		       INNER JOIN CITY      G ON (A.CITY_CODE_NO = G.CITY_CODE_NO
+		                              AND G.CITY_CODE_NO = F.CITY_CODE_NO)
+		 WHERE A.JO_NO = #joNo#                              
+	</select>
+	
+	<select id="getJtCodeNo" parameterClass="Integer" resultClass="Integer">
+		SELECT JT_CODE_NO	
+		  FROM JOB_OPENING
+		 WHERE JO_NO = #joNo#
+	</select>
+	
+	<insert id="applyJobOpening" parameterClass="kr.or.ddit.jobOpening.vo.ApplyVO">
+		INSERT  INTO APPLY
+		        (APPL_NO,           HR_NO,      JO_NO,  	JT_NO)
+		VALUES  (APPLY_SEQ.NEXTVAL, #hrNo#,     #joNo#, 	#jtNo#)
+		
+		<selectKey keyProperty="applNo" resultClass="Integer">
+			SELECT APPLY_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+		
+	</insert>
+	
+	<update id="updateJobOpening" parameterClass="kr.or.ddit.jobOpening.vo.JobOpeningVO">
+		UPDATE JOB_OPENING
+		   SET JO_TITLE = #joTitle#,
+		       JO_SDATE = #joSdate#,
+		       JO_EDATE = #joEdate#,
+		       JG_CODE_NO = #jgCodeNo#,
+		       JT_CODE_NO = #jtCodeNo#,
+		       JO_SAL = #joSal#,
+		       JO_RANK = #joRank#,
+		       JO_MTHD = #joMthd#,
+		       JO_LINK = #joLink#,
+		       JO_FILE = #joFile#,
+		       PROV_CODE_NO = #provCodeNo#,
+		       CITY_CODE_NO = #cityCodeNo#,
+		       PL_CODE_NO = #plCodeNo#
+		 WHERE JO_NO = #joNo#
+	</update>
+	
+	<!-- 스크랩 -->
+	<insert id="insertClip" parameterClass="kr.or.ddit.jobOpening.vo.ApplyVO">
+		INSERT	INTO CLIP
+				(HR_NO,		JO_NO)
+		VALUES	(#hrNo#,	#joNo#)		
+	</insert>
+	
+	<!-- 스크랩 취소 -->
+	<delete id="deleteClip" parameterClass="kr.or.ddit.jobOpening.vo.ApplyVO">
+		DELETE FROM CLIP
+		 WHERE HR_NO = #hrNo#
+		       AND JO_NO = #joNo#
+	</delete>
+	
+	<!-- insertClip이후 반드시 실행된다. -->
+	<update id="addClip" parameterClass="Integer">
+		UPDATE JOB_OPENING
+		   SET JO_CLIP = JO_CLIP + 1
+		 WHERE JO_NO = #joNo#
+	</update>
+	
+	<!-- deleteClip이후 반드시 실행된다. -->
+	<update id="subtractClip" parameterClass="Integer">
+		UPDATE JOB_OPENING
+		   SET JO_CLIP = JO_CLIP - 1
+		 WHERE JO_NO = #joNo#
+	</update>
+	
+	<!-- 채용공고번호를 입력받아 담당 기업회원 번호를 리턴 -->
+	<select id="checkJobOpeningRight" parameterClass="Integer"
+		resultClass="Integer">
+		SELECT B.MEM_NO
+		  FROM JOB_OPENING A
+		  	   INNER JOIN COMPANY B ON (A.COM_NO = B.COM_NO
+		  	   					    AND A.JO_NO = #joNo#)
+			   INNER JOIN MEMBER C  ON (B.MEM_NO = C.MEM_NO)
+	</select>
+	
+	<delete id="deleteJobOpening" parameterClass="Integer">
+		DELETE FROM JOB_OPENING
+		 WHERE JO_NO = #joNo#
+	</delete>
+	
+	
+	<select id="getClipByHR" parameterClass="int" resultMap="JOCardMap">
+		SELECT E.COM_NM,        E.COM_HPG,      E.COM_FAV,
+		       E.COM_INTRO,     A.JO_TITLE,     A.JO_CLIP,
+		       A.JO_MTHD,       B.JG_CODE_NM,   C.JT_CODE_NM,
+		       D.PL_CODE_NM,    A.JO_RANK,      A.JO_SAL,
+		       A.JO_SDATE,      A.JO_EDATE,     G.CITY_CODE_NM,
+		       F.PROV_CODE_NM,  A.JO_NO,
+		       DECODE(FN_GET_SAL_TYPE_JO(A.JO_NO), '0', '정보없음',
+				                                    '1', '0-2000만원',
+				                                    '2', '2000-2500만원',
+				                                    '3', '2500-3000만원',
+				                                    '4', '3000-4000만원',
+				                                    '5', '4000-5000만원',
+				                                    '6', '5000만원 이상') AS JO_SAL_TYPE_NM,
+		       FN_GET_STATE_JO(A.JO_NO) AS JO_STATE,
+		       DECODE(FN_GET_STATE_JO(A.JO_NO), '0', '마감',
+			                                    '1',    '진행중',
+			                                    '2',    '예정')   AS JO_STATE_NM
+		  FROM JOB_OPENING A
+		       INNER JOIN JOB_GROUP B ON (A.JG_CODE_NO = B.JG_CODE_NO)
+		       INNER JOIN JOB_TITLE C ON (A.JT_CODE_NO = C.JT_CODE_NO
+		                              AND B.JG_CODE_NO = C.JG_CODE_NO)
+		       INNER JOIN PROG_LANG D ON (A.PL_CODE_NO = D.PL_CODE_NO)
+		       INNER JOIN COMPANY   E ON (A.COM_NO = E.COM_NO)
+		       INNER JOIN PROV      F ON (A.PROV_CODE_NO = F.PROV_CODE_NO)
+		       INNER JOIN CITY      G ON (A.CITY_CODE_NO = G.CITY_CODE_NO
+		                              AND G.CITY_CODE_NO = F.CITY_CODE_NO)
+		 WHERE A.JO_NO IN
+         
+         (SELECT JO_NO 
+          FROM CLIP
+          WHERE HR_NO = #hrNo#)
+	</select> 
+	
+	<select id="getClipByCom" parameterClass="int" resultMap="JOCardMap">
+	
+		SELECT E.COM_NM,        E.COM_HPG,      E.COM_FAV,
+		       E.COM_INTRO,     A.JO_TITLE,     A.JO_CLIP,
+		       A.JO_MTHD,       B.JG_CODE_NM,   C.JT_CODE_NM,
+		       D.PL_CODE_NM,    A.JO_RANK,      A.JO_SAL,
+		       A.JO_SDATE,      A.JO_EDATE,     G.CITY_CODE_NM,
+		       F.PROV_CODE_NM,  A.JO_NO,
+		       DECODE(FN_GET_SAL_TYPE_JO(A.JO_NO), '0', '정보없음',
+				                                    '1', '0-2000만원',
+				                                    '2', '2000-2500만원',
+				                                    '3', '2500-3000만원',
+				                                    '4', '3000-4000만원',
+				                                    '5', '4000-5000만원',
+				                                    '6', '5000만원 이상') AS JO_SAL_TYPE_NM,
+		       FN_GET_STATE_JO(A.JO_NO) AS JO_STATE,
+		       DECODE(FN_GET_STATE_JO(A.JO_NO), '0', '마감',
+			                                    '1',    '진행중',
+			                                    '2',    '예정')   AS JO_STATE_NM
+		  FROM JOB_OPENING A
+		       INNER JOIN JOB_GROUP B ON (A.JG_CODE_NO = B.JG_CODE_NO)
+		       INNER JOIN JOB_TITLE C ON (A.JT_CODE_NO = C.JT_CODE_NO
+		                              AND B.JG_CODE_NO = C.JG_CODE_NO)
+		       INNER JOIN PROG_LANG D ON (A.PL_CODE_NO = D.PL_CODE_NO)
+		       INNER JOIN COMPANY   E ON (A.COM_NO = E.COM_NO)
+		       INNER JOIN PROV      F ON (A.PROV_CODE_NO = F.PROV_CODE_NO)
+		       INNER JOIN CITY      G ON (A.CITY_CODE_NO = G.CITY_CODE_NO
+		                              AND G.CITY_CODE_NO = F.CITY_CODE_NO)
+		 WHERE A.JO_NO IN
+         
+         (SELECT JO_NO 
+          FROM JOB_OPENING
+          WHERE COM_NO = #comNo#)
+
+	</select>
+	
+	
+		<select id="getApplyByCom" parameterClass="int" resultMap="JOCardMap">
+	
+		SELECT E.COM_NM,        E.COM_HPG,      E.COM_FAV,
+		       E.COM_INTRO,     A.JO_TITLE,     A.JO_CLIP,
+		       A.JO_MTHD,       B.JG_CODE_NM,   C.JT_CODE_NM,
+		       D.PL_CODE_NM,    A.JO_RANK,      A.JO_SAL,
+		       A.JO_SDATE,      A.JO_EDATE,     G.CITY_CODE_NM,
+		       F.PROV_CODE_NM,  A.JO_NO,
+		       DECODE(FN_GET_SAL_TYPE_JO(A.JO_NO), '0', '정보없음',
+				                                    '1', '0-2000만원',
+				                                    '2', '2000-2500만원',
+				                                    '3', '2500-3000만원',
+				                                    '4', '3000-4000만원',
+				                                    '5', '4000-5000만원',
+				                                    '6', '5000만원 이상') AS JO_SAL_TYPE_NM,
+		       FN_GET_STATE_JO(A.JO_NO) AS JO_STATE,
+		       DECODE(FN_GET_STATE_JO(A.JO_NO), '0', '마감',
+			                                    '1',    '진행중',
+			                                    '2',    '예정')   AS JO_STATE_NM
+		  FROM JOB_OPENING A
+		       INNER JOIN JOB_GROUP B ON (A.JG_CODE_NO = B.JG_CODE_NO)
+		       INNER JOIN JOB_TITLE C ON (A.JT_CODE_NO = C.JT_CODE_NO
+		                              AND B.JG_CODE_NO = C.JG_CODE_NO)
+		       INNER JOIN PROG_LANG D ON (A.PL_CODE_NO = D.PL_CODE_NO)
+		       INNER JOIN COMPANY   E ON (A.COM_NO = E.COM_NO)
+		       INNER JOIN PROV      F ON (A.PROV_CODE_NO = F.PROV_CODE_NO)
+		       INNER JOIN CITY      G ON (A.CITY_CODE_NO = G.CITY_CODE_NO
+		                              AND G.CITY_CODE_NO = F.CITY_CODE_NO)
+		 WHERE A.JO_NO IN
+         
+         (SELECT JO_NO 
+          FROM APPLY
+          WHERE JO_NO IN   (SELECT JO_NO
+                              FROM JOB_OPENING
+                              WHERE COM_NO = #comNo#))
+                              
+
+	</select>
+	
+		<select id="getApplyByHR" parameterClass="int" resultMap="JOCardMap">
+	
+		SELECT E.COM_NM,        E.COM_HPG,      E.COM_FAV,
+		       E.COM_INTRO,     A.JO_TITLE,     A.JO_CLIP,
+		       A.JO_MTHD,       B.JG_CODE_NM,   C.JT_CODE_NM,
+		       D.PL_CODE_NM,    A.JO_RANK,      A.JO_SAL,
+		       A.JO_SDATE,      A.JO_EDATE,     G.CITY_CODE_NM,
+		       F.PROV_CODE_NM,  A.JO_NO,
+		       DECODE(FN_GET_SAL_TYPE_JO(A.JO_NO), '0', '정보없음',
+				                                    '1', '0-2000만원',
+				                                    '2', '2000-2500만원',
+				                                    '3', '2500-3000만원',
+				                                    '4', '3000-4000만원',
+				                                    '5', '4000-5000만원',
+				                                    '6', '5000만원 이상') AS JO_SAL_TYPE_NM,
+		       FN_GET_STATE_JO(A.JO_NO) AS JO_STATE,
+		       DECODE(FN_GET_STATE_JO(A.JO_NO), '0', '마감',
+			                                    '1',    '진행중',
+			                                    '2',    '예정')   AS JO_STATE_NM
+		  FROM JOB_OPENING A
+		       INNER JOIN JOB_GROUP B ON (A.JG_CODE_NO = B.JG_CODE_NO)
+		       INNER JOIN JOB_TITLE C ON (A.JT_CODE_NO = C.JT_CODE_NO
+		                              AND B.JG_CODE_NO = C.JG_CODE_NO)
+		       INNER JOIN PROG_LANG D ON (A.PL_CODE_NO = D.PL_CODE_NO)
+		       INNER JOIN COMPANY   E ON (A.COM_NO = E.COM_NO)
+		       INNER JOIN PROV      F ON (A.PROV_CODE_NO = F.PROV_CODE_NO)
+		       INNER JOIN CITY      G ON (A.CITY_CODE_NO = G.CITY_CODE_NO
+		                              AND G.CITY_CODE_NO = F.CITY_CODE_NO)
+		 WHERE A.JO_NO IN
+         
+         (SELECT JO_NO 
+          FROM APPLY
+          WHERE HR_NO = #hrNo#)
+
+	</select>
+	
+	
+	
+	
+	
+</sqlMap>
